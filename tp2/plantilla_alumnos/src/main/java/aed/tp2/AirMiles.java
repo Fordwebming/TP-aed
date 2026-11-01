@@ -63,3 +63,33 @@ public class AirMiles implements SistemaAirMiles {
         throw new UnsupportedOperationException("Sin implementar");
     }
 }
+
+class Usuario {
+    private int iDentificador; 
+    private double saldoDisponible;
+    private double millasTotales;
+    private Handle<Usuario> lugarEnRanking;
+
+    public Usuario (int iDentificador) {
+        this.iDentificador = iDentificador;
+        this.saldoDisponible = 0;
+        this.millasTotales = 0;
+        this.lugarEnRanking = null;
+    }
+}
+
+class Promocion  {
+    private String nombrePromo;
+    private double factor;
+    private  double tope;
+    private double millasAcumuladas;
+
+    public Promocion (String nombrePromo, double factor,double tope){
+        this.nombrePromo = nombrePromo;
+        this.factor =factor;
+        this.tope = tope;
+        this.millasAcumuladas = 0;
+    }
+
+
+}
