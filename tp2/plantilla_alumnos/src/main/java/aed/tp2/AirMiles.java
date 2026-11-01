@@ -68,6 +68,13 @@ class Usuario {
     private double saldoDisponible;
     private double millasTotales;
     private Handle<Usuario> lugarEnRanking;
+
+    public Usuario (int iDentificador) {
+        this.iDentificador = iDentificador;
+        this.saldoDisponible = 0;
+        this.millasTotales = 0;
+        this.lugarEnRanking = null;
+    }
 }
 
 class Promocion  {
@@ -75,4 +82,11 @@ class Promocion  {
     private double factor;
     private  double tope;
     private double millasAcumuladas;
+
+    public Promocion (String nombrePromo, double factor,double tope){
+        this.nombrePromo = nombrePromo;
+        this.factor =factor;
+        this.tope = tope;
+        this.millasAcumuladas = 0;
+    }
 }
