@@ -1,7 +1,7 @@
 package aed.tp2;
 
 public class AirMiles implements SistemaAirMiles {
-    /*COMPLETAR*/ 
+    // semi propuestas para hacer el codigo sin mucha linea roja
     private BaseUsuarios baseUsuarios;
     private Trie<Promocion> promociones;//colocarnonbre
     private int idMayorAcumulador;
@@ -28,7 +28,7 @@ public class AirMiles implements SistemaAirMiles {
         throw new UnsupportedOperationException("Sin implementar");
     }
 
-    public void acumularMillas(int id, double distancia, String nombrePromo) {
+    public void acumularMillas(int id, double distancia, String nombrePromo) {//le faltan un par de cosas despues las veo
         Usuario usuario = BaseUsuarios.buscar(id);
         double factorCategoria;
         double millasTotalesAcumuladas = usuario.getMillasTotales();
@@ -81,8 +81,16 @@ public class AirMiles implements SistemaAirMiles {
 
     }
 
-    public void canjearMillas(int id, double cantidad) {
-        throw new UnsupportedOperationException("Sin implementar");
+    public void canjearMillas(int id, double cantidad) {//aun le debo agregar varias cosas q le faltan
+        Usuario usuario = baseUsuarios.buscar(id);
+        if (usuario.getMillasDisponibles() <cantidad ){return; }
+        usuario.restarDisponibles (cantidad);
+        usuario.sumarGastadas(cantidad);
+        // cuando haya nombre deberia modificar el ranking
+        if (usuario.getMillasGastadas() > maxMillasGastadas){
+            maxMillasGastadas = usuario.getMillasGastadas();
+            idMayorCanjeador = usuario.getId();
+        }
     }
 
     public void transferirMillas(int origen, int destino, double cantidad) {
@@ -131,12 +139,14 @@ class Usuario {
     private double millasDisponibles;
     private double millasTotales;
     private Handle<Usuario> lugarEnRanking;
+    private double millasGastadas;
 
     public Usuario (int iDentificador) {
         this.iDentificador = iDentificador;
         this.millasDisponibles = 0;
         this.millasTotales = 0;
         this.lugarEnRanking = null;
+        this.millasGastadas = 0;
     }
 // mis cositos para acortar codigo    
 public double getMillasTotales(){return millasTotales;}
@@ -144,6 +154,10 @@ public double getmillasDisponibles (){return millasDisponibles;}
 public void sumarMillasTotales (double millas){millasTotales += millas;}
 public void sumarMillasDisponibles (double millas){millasDisponibles += millas;}
 public int getId(){return iDentificador;}
+public double getMillasDisponibles(){return millasDisponibles;}
+public double getMillasGastadas(){return millasGastadas;}
+public void restarDisponibles (double millas){millasDisponibles -= millas;} 
+public void sumarGastadas (double millas){millasGastadas +=millas;}
 }
 
 class Promocion  {
