@@ -1,18 +1,26 @@
 package aed.tp2;
 
 public class AirMiles implements SistemaAirMiles {
-    /*COMPLETAR*/
+    private BaseUsuarios usuarios;
 
     public AirMiles() {
-        throw new UnsupportedOperationException("Sin implementar");
+        this.usuarios = new BaseUsuarios();
     }
 
     public void registrarUsuario(int id) {
-        throw new UnsupportedOperationException("Sin implementar");
+        Usuario u = new Usuario(id);  
+        usuarios.insertar(u);
     }
 
     public void registrarUsuarioConReferidor(int id, int ref) {
-        throw new UnsupportedOperationException("Sin implementar");
+        Usuario u = new Usuario(id);
+        u.millas_disponibles += 500;
+        u.millas_totales += 500;  
+        usuarios.insertar(u);
+        Usuario referidor = usuarios.buscarUsuarioPorID(ref); //estoy asumiendo que el referidor existe
+        referidor.millas_disponibles += 500;
+        referidor.millas_totales += 500;
+
     }
 
     public void acumularMillas(int id, double distancia, String nombrePromo) {
@@ -63,3 +71,7 @@ public class AirMiles implements SistemaAirMiles {
         throw new UnsupportedOperationException("Sin implementar");
     }
 }
+
+
+
+

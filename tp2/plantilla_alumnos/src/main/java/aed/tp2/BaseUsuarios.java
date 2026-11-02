@@ -80,5 +80,18 @@ public class BaseUsuarios {
         return raiz_actual.usuario;
     }
 
+    public Usuario buscarUsuarioPorID(int u){
+        Nodo raiz_actual = this.raiz;
+        while (raiz_actual.id != u){
+            if (raiz_actual.id < u){ //busco a la derecha
+                raiz_actual = raiz_actual.derecha;
+            }
+            else{
+                raiz_actual = raiz_actual.izquierda; //busco a la izquierda
+            }
+        }
+        return raiz_actual.usuario;
+    }
+
 
 }
