@@ -7,7 +7,7 @@ public class BaseUsuarios {
 
     private class Nodo {
         // Agregar atributos privados del Nodo
-        Usuario usuario;
+        Usuario usuario;    
         int id;
         Nodo izquierda;
         Nodo padre;

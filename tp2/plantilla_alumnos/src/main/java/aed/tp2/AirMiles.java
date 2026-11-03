@@ -2,9 +2,13 @@ package aed.tp2;
 
 public class AirMiles implements SistemaAirMiles {
     private BaseUsuarios usuarios;
+    private Trie<Promo> promociones;
 
     public AirMiles() {
         this.usuarios = new BaseUsuarios();
+        this.promociones = new Trie<Promo>();
+        Promo predeterminada = new Promo(1.0);
+        this.promociones.insertar("NoPromo", predeterminada);
     }
 
     public void registrarUsuario(int id) {
@@ -59,15 +63,17 @@ public class AirMiles implements SistemaAirMiles {
     }
 
     public void iniciarPromocion(String nombre, double factor) {
-        throw new UnsupportedOperationException("Sin implementar");
+        Promo nuevaPromo = new Promo(factor);
+        promociones.insertar(nombre, nuevaPromo);
     }
 
     public void iniciarPromocionConTope(String nombre, double factor, double tope) {
-        throw new UnsupportedOperationException("Sin implementar");
+        Promo nuevaPromoTope = new Promo(factor, tope);
+        promociones.insertar(nombre, nuevaPromoTope);
     }
 
     public void finalizarPromocion(String nombre) {
-        throw new UnsupportedOperationException("Sin implementar");
+        promociones.eliminar(nombre);
     }
 
     public int elMasAcumulador() {
