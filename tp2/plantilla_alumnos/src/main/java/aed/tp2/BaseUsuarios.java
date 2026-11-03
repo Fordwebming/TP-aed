@@ -82,7 +82,7 @@ public class BaseUsuarios {
 
     public Usuario buscarUsuarioPorID(int u){
         Nodo raiz_actual = this.raiz;
-        while (raiz_actual.id != u){
+        while (raiz_actual != null && raiz_actual.id != u ){
             if (raiz_actual.id < u){ //busco a la derecha
                 raiz_actual = raiz_actual.derecha;
             }
@@ -90,7 +90,13 @@ public class BaseUsuarios {
                 raiz_actual = raiz_actual.izquierda; //busco a la izquierda
             }
         }
-        return raiz_actual.usuario;
+        //si el usuario no existe devuelve null, asi que tambien sirve como un metodo para saber si pertenece un usuario
+        if (raiz_actual == null){
+            return null;
+        }
+        else{
+            return raiz_actual.usuario;
+        }
     }
 
 

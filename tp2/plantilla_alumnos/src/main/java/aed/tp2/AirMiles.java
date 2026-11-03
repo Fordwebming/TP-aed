@@ -2,26 +2,34 @@ package aed.tp2;
 
 public class AirMiles implements SistemaAirMiles {
     private BaseUsuarios usuarios;
-    private int elMasCanjeador;
-    private int elMasAcumulador;
 
     public AirMiles() {
         this.usuarios = new BaseUsuarios();
     }
 
     public void registrarUsuario(int id) {
+        if (usuarios.buscarUsuarioPorID(id)!=null){
+            throw new UnsupportedOperationException("el usuario ya pertenece al sistema");
+        }
         Usuario u = new Usuario(id);  
         usuarios.insertar(u);
     }
 
     public void registrarUsuarioConReferidor(int id, int ref) {
+        if (usuarios.buscarUsuarioPorID(id)!=null){
+            throw new UnsupportedOperationException("el usuario ya pertenece al sistema");
+        }
         Usuario u = new Usuario(id);
+        Usuario referidor = usuarios.buscarUsuarioPorID(ref); 
+        if (referidor == null){
+            throw new UnsupportedOperationException("el referidor no pertenece al sistema");
+        }
         u.millas_disponibles += 500;
         u.millas_totales += 500;  
         usuarios.insertar(u);
-        Usuario referidor = usuarios.buscarUsuarioPorID(ref); //estoy asumiendo que el referidor existe
         referidor.millas_disponibles += 500;
         referidor.millas_totales += 500;
+        // como las constantes no cuentan para la complejidad puedo recorrer el arbol 3 veces sin romper la consigna
 
     }
 

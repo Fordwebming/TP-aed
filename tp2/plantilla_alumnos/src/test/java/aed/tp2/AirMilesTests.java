@@ -1,8 +1,13 @@
 package aed.tp2;
 
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 public class AirMilesTests {
     private AirMiles am;
@@ -569,5 +574,20 @@ public class AirMilesTests {
             assertFalse(visto[par[0]]); // sin pares repetidos
             visto[par[0]] = visto[par[1]] = true;
         }
+    }
+
+    //test agregados por nosotros
+
+    @Test 
+    void testPropiosRegistrarUsuarios(){
+        AirMiles am1 = new AirMiles();
+        am1.registrarUsuario(100);
+        //tratar de meter un usuario que ya existe en registrarUsuario
+        assertEquals("el usuario ya pertenece al sistema", assertThrows(UnsupportedOperationException.class , () -> am1.registrarUsuario(100)).getMessage());
+        am1.registrarUsuario(101);
+        //tratar de meter un usuario que ya existe en registrarUsuarioConReferidor
+        assertEquals("el usuario ya pertenece al sistema", assertThrows(UnsupportedOperationException.class , () -> am1.registrarUsuarioConReferidor(100, 101)).getMessage());
+        //tratar de meter un usuario con un referidor inexistente
+        assertEquals("el referidor no pertenece al sistema", assertThrows(UnsupportedOperationException.class , () -> am1.registrarUsuarioConReferidor(102, 103)).getMessage());
     }
 }
