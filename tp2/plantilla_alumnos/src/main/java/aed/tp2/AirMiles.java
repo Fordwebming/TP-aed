@@ -2,6 +2,8 @@ package aed.tp2;
 
 public class AirMiles implements SistemaAirMiles {
     private BaseUsuarios usuarios;
+    private int elMasCanjeador;
+    private int elMasAcumulador;
 
     public AirMiles() {
         this.usuarios = new BaseUsuarios();
