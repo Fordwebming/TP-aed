@@ -7,11 +7,7 @@ public class ABB<T> {
 
     private class Nodo {
         // Agregar atributos privados del Nodo
-<<<<<<< HEAD:tp2/plantilla_alumnos/src/main/java/aed/tp2/BaseUsuarios.java
-        Usuario usuario;    
-=======
         Usuario usuario; //nose si esto cumple con que sea una estructura generica
->>>>>>> 24ceb3d8dbd8e3475c7300c49637ce059fced76d:tp2/plantilla_alumnos/src/main/java/aed/tp2/ABB.java
         int id;
         Nodo izquierda;
         Nodo padre;
