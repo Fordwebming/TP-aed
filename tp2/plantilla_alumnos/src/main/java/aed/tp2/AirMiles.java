@@ -1,11 +1,12 @@
 package aed.tp2;
 
 public class AirMiles implements SistemaAirMiles {
-    private BaseUsuarios usuarios;
+
+    private ABB<Usuario> usuarios;
     private Trie<Promo> promociones;
 
     public AirMiles() {
-        this.usuarios = new BaseUsuarios();
+        this.usuarios = new ABB<>();
         this.promociones = new Trie<Promo>();
         Promo predeterminada = new Promo(1.0);
         this.promociones.insertar("NoPromo", predeterminada);
