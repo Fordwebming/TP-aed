@@ -1,10 +1,10 @@
 package aed.tp2;
 
 public class AirMiles implements SistemaAirMiles {
-    private BaseUsuarios usuarios;
+    private ABB<Usuario> usuarios;
 
     public AirMiles() {
-        this.usuarios = new BaseUsuarios();
+        this.usuarios = new ABB<>();
     }
 
     public void registrarUsuario(int id) {
