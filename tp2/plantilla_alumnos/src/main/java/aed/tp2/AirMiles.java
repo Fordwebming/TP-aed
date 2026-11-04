@@ -1,19 +1,14 @@
 package aed.tp2;
 
 public class AirMiles implements SistemaAirMiles {
-
     private ABB<Usuario> usuarios;
-    private Trie<Promo> promociones;
 
     public AirMiles() {
         this.usuarios = new ABB<>();
-        this.promociones = new Trie<Promo>();
-        Promo predeterminada = new Promo(1.0);
-        this.promociones.insertar("NoPromo", predeterminada);
     }
 
     public void registrarUsuario(int id) {
-        if (usuarios.buscarUsuarioPorID(id)!=null){
+        if (buscarUsuarioPorID(id)!=null){
             throw new UnsupportedOperationException("el usuario ya pertenece al sistema");
         }
         Usuario u = new Usuario(id);  
@@ -21,11 +16,11 @@ public class AirMiles implements SistemaAirMiles {
     }
 
     public void registrarUsuarioConReferidor(int id, int ref) {
-        if (usuarios.buscarUsuarioPorID(id)!=null){
+        if (buscarUsuarioPorID(id)!=null){
             throw new UnsupportedOperationException("el usuario ya pertenece al sistema");
         }
         Usuario u = new Usuario(id);
-        Usuario referidor = usuarios.buscarUsuarioPorID(ref); 
+        Usuario referidor = buscarUsuarioPorID(ref); 
         if (referidor == null){
             throw new UnsupportedOperationException("el referidor no pertenece al sistema");
         }
@@ -51,7 +46,7 @@ public class AirMiles implements SistemaAirMiles {
     }
 
     public double consultarSaldo(int id) {
-        Usuario u = usuarios.buscarUsuarioPorID(id);
+        Usuario u = buscarUsuarioPorID(id);
         return u.millas_disponibles;
     }
 
@@ -64,17 +59,15 @@ public class AirMiles implements SistemaAirMiles {
     }
 
     public void iniciarPromocion(String nombre, double factor) {
-        Promo nuevaPromo = new Promo(factor);
-        promociones.insertar(nombre, nuevaPromo);
+        throw new UnsupportedOperationException("Sin implementar");
     }
 
     public void iniciarPromocionConTope(String nombre, double factor, double tope) {
-        Promo nuevaPromoTope = new Promo(factor, tope);
-        promociones.insertar(nombre, nuevaPromoTope);
+        throw new UnsupportedOperationException("Sin implementar");
     }
 
     public void finalizarPromocion(String nombre) {
-        promociones.eliminar(nombre);
+        throw new UnsupportedOperationException("Sin implementar");
     }
 
     public int elMasAcumulador() {
@@ -88,6 +81,27 @@ public class AirMiles implements SistemaAirMiles {
     public int[][] paresTransferidoresExclusivos() {
         throw new UnsupportedOperationException("Sin implementar");
     }
+
+    //metodos auxiliares
+    public Usuario buscarUsuarioPorID(int u){
+        ABB<Usuario>.Nodo raiz_actual = usuarios.raiz;
+        while (raiz_actual != null && raiz_actual.usuario.identificador != u ){
+            if (raiz_actual.usuario.identificador < u){ //busco a la derecha
+                raiz_actual = raiz_actual.derecha;
+            }
+            else{
+                raiz_actual = raiz_actual.izquierda; //busco a la izquierda
+            }
+        }
+        //si el usuario no existe devuelve null, asi que tambien sirve como un metodo para saber si pertenece un usuario
+        if (raiz_actual == null){
+            return null;
+        }
+        else{
+            return raiz_actual.usuario;
+        }
+    }
+
 }
 
 

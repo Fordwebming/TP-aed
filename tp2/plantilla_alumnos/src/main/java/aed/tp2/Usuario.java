@@ -1,18 +1,19 @@
 package aed.tp2;
 
-public class Usuario {
+public class Usuario implements Comparable<Usuario> {
     public int identificador;  //los atributos son publicos para poder usarlos en la clase nodo del ABB de usuarios
     public double millas_totales;
     public double millas_disponibles;
 
-    
     public Usuario(int identificador) {
         this.identificador = identificador;
         this.millas_totales = 0;
         this.millas_disponibles = 0;
     }
     
-    
+    public int compareTo(Usuario otro){
+        return Integer.compare(this.identificador, otro.identificador);
+    }
 }
 
 
