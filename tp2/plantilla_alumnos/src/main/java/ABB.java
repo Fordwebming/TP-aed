@@ -1,13 +1,13 @@
 package aed.tp2;
 
-public class BaseUsuarios {
+public class ABB<T> {
     private Nodo raiz;
     private int cardinal;
     
 
     private class Nodo {
         // Agregar atributos privados del Nodo
-        Usuario usuario;
+        Usuario usuario; //nose si esto cumple con que sea una estructura generica
         int id;
         Nodo izquierda;
         Nodo padre;
@@ -24,7 +24,7 @@ public class BaseUsuarios {
         
     }
 
-    public BaseUsuarios() {
+    public ABB() {
         raiz = null;
         cardinal = 0;
     }
