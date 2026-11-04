@@ -1,3 +1,5 @@
+package aed.tp2;
+
 public class Promo{
     public double factor;
     public double tope;

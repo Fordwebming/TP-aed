@@ -5,6 +5,7 @@ public class Usuario {
     public double millas_totales;
     public double millas_disponibles;
 
+    
     public Usuario(int identificador) {
         this.identificador = identificador;
         this.millas_totales = 0;
