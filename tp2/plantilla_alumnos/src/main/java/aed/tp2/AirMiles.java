@@ -3,12 +3,15 @@ package aed.tp2;
 public class AirMiles implements SistemaAirMiles {
     private ABB<Usuario> usuarios;
     private Trie<Promo> promociones;
+    private HeapMax<Usuario> ranking;
 
     public AirMiles() {
         this.usuarios = new ABB<>();
         this.promociones = new Trie<Promo>();
         Promo predeterminada = new Promo(1.0);
         this.promociones.insertar("NoPromo", predeterminada);
+        ComparadorUsuarios comparador = new ComparadorUsuarios();
+        ranking = new HeapMax<>(comparador);
     }
 
     public void registrarUsuario(int id) {
