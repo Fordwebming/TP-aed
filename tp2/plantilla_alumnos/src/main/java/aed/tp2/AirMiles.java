@@ -17,6 +17,9 @@ public class AirMiles implements SistemaAirMiles {
         }
         Usuario u = new Usuario(id);  
         usuarios.insertar(u);
+        HandleHeap<Usuario> handle =new HandleHeap<Usuario>(u);//agrego estas 3 lineas para registrando en el heap
+        handle.asignarHeap(ranking);
+        ranking.insertar(handle);
     }
 
     public void registrarUsuarioConReferidor(int id, int ref) {
@@ -34,6 +37,10 @@ public class AirMiles implements SistemaAirMiles {
         referidor.millas_disponibles += 500;
         referidor.millas_totales += 500;
         // como las constantes no cuentan para la complejidad puedo recorrer el arbol 3 veces sin romper la consigna
+        //agrego las mismas lineas que en registrar usuario
+        HandleHeap<Usuario> handle =new HandleHeap<Usuario>(u);
+        handle.asignarHeap(ranking);
+        ranking.insertar(handle);
 
     }
 

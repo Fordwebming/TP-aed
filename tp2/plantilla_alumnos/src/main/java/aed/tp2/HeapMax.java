@@ -4,10 +4,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 
 public class HeapMax<T>{
-    //raiz es el que tene mas millas
-    //prop del heap max: caa padre tiene un valor mayor o igual al de sus hijos, sino reacomodar el heap
-    //private NodoHeap raiz;
-    //al agregar en el heap se coloca en el primer lugar libre, de izq a der, luego reacomodamos el heap
+    
     private int cantidad; //el arbol tiene que esta completo, tipo equilibrado, por eso hay que saber la prox posic disp
     private ArrayList<HandleHeap<T>> elementos;
     private Comparator<T> comparador;
@@ -15,7 +12,7 @@ public class HeapMax<T>{
 
     public HeapMax(Comparator<T> critComparacion) {
         elementos =new ArrayList<HandleHeap<T>>();
-        cantidad = -0;
+        cantidad = 0;
         comparador = critComparacion;
     }
 
