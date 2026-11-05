@@ -1,112 +1,102 @@
 package aed.tp2;
-public class HeapMax<T extends Comparable<T>>{
+
+import java.util.ArrayList;
+import java.util.Comparator;
+
+public class HeapMax<T>{
     //raiz es el que tene mas millas
     //prop del heap max: caa padre tiene un valor mayor o igual al de sus hijos, sino reacomodar el heap
-    private NodoHeap raiz;
+    //private NodoHeap raiz;
     //al agregar en el heap se coloca en el primer lugar libre, de izq a der, luego reacomodamos el heap
     private int cantidad; //el arbol tiene que esta completo, tipo equilibrado, por eso hay que saber la prox posic disp
-    
+    private ArrayList<HandleHeap<T>> elementos;
+    private Comparator<T> comparador;
 
-    public HeapMax() {
-        raiz = null;
-        cantidad = 0;
+
+    public HeapMax(Comparator<T> critComparacion) {
+        elementos =new ArrayList<HandleHeap<T>>();
+        cantidad = -0;
+        comparador = critComparacion;
     }
 
-    private String aBinario(int posicion) {
-        String res = "";
-        while (posicion>0) {
-            int resto = posicion % 2;
-            res = resto + res;
-            posicion = posicion / 2;
-        }
-        return res;
+    private int comparar(HandleHeap<T> h1, HandleHeap<T> h2) {
+        return comparador.compare(h1.valor(), h2.valor());
     }
 
-    private NodoHeap obtenerNodo(int posicion) {//para poder obetener correctamente el nodo padre del nuevo nodo y no romper el vinculo
-        String caminoHastaNodo = aBinario(posicion);
-        NodoHeap actual = raiz;
-        for (int i=1; i<caminoHastaNodo.length(); i++){//iniciando i en 1 me aseguro de no tomar el primer 1 del camino binario
-            //ya que ese referencia a la raiz
-            if (caminoHastaNodo.charAt(i) == '0') {//en binario los 0 indican izquierda y los 1 derecha
-                actual = actual.izq;
-            } else {
-                actual = actual.der;
-            }
-
-        }
-        return actual;
-    }
-
-    private class NodoHeap {
-        T valor; //aca se va a guarda el handle
-        NodoHeap izq;
-        NodoHeap der;
-        NodoHeap padre;
-        NodoHeap(T v) {
-            valor=v;
-        }
-    }
-
-
-    public void insertar(T elem) {
-        NodoHeap nuevo = new NodoHeap(elem);
-        if (cantidad==0) {
-            raiz=nuevo;
-        } else {
-            int posicionNueva = cantidad +1;
-            int posicionPadre = posicionNueva/2;
-            NodoHeap padreDelNuevo= obtenerNodo(posicionPadre);
-            nuevo.padre=padreDelNuevo;
-            if (posicionNueva%2 ==0) {
-                padreDelNuevo.izq = nuevo;
-            } else {
-                padreDelNuevo.der = nuevo;
-            }
-        }//en esta creo el vinculo entre el nodo nuevo y su padre ya existente
-        //en obtenerNodo recorro el camino que me da el binario para encontrar el nodo que quiero usar como padre
+    public void insertar(HandleHeap<T> handle) {
+        elementos.add(handle);
         cantidad+=1;
-        siftUp(nuevo);//conservo el equilibrio del heap
+        handle.asignarIndice(cantidad-1);
+        siftUp(cantidad-1);
     }
 
-    private void intercambiar(NodoHeap a, NodoHeap b) {
-        T copiaParaIntercambiar = a.valor;
-        a.valor = b.valor;
-        b.valor = copiaParaIntercambiar;
-    }
-
-    //cuando inserto un nodo nuevo
-    private void siftUp(NodoHeap actual) {
-        while (actual.padre != null && actual.valor.compareTo(actual.padre.valor) > 0) {//veo si el hijo es mayor que el padre
-            intercambiar(actual, actual.padre);
-            actual = actual.padre; //cuando llego a la raiz termino puedo ya no hay padre -> es maximo
-
+    private void siftUp(int indice) {//subo un elemento en el heap cuando tiene mayor prioridad que su padre
+        while (indice>0) {
+            int padre =(indice-1)/2;
+            if (comparar(elementos.get(indice), elementos.get(padre)) >0) {//comparo si el hijo es mayor que el padre
+                intercambiar(indice, padre);
+                indice=padre;//voy subiendo hasta llegar a la raiz donde no hay mas padre
+            }
         }
     }
 
-    public void siftDown(NodoHeap actual) {//si un padre es menor que uno de sus hijos, lo bajo intercambianddo
-        while (actual.izq != null) {
-            NodoHeap mayor =actual.izq;//voy buscndo algun hijo que sea mayor que se padre
-            if (actual.der != null && actual.der.valor.compareTo(mayor.valor) > 0) {
-                mayor = actual.der;
+    private void intercambiar(int posicHijo, int posicPadre) {
+        HandleHeap<T>  antiguoHijo = elementos.get(posicHijo);
+        elementos.set(posicHijo, elementos.get(posicPadre));//bajo al antiguo padre a la pasicion del hijo
+        elementos.set(posicPadre,antiguoHijo);//subo al hijo a la posicion del padre
+        elementos.get(posicHijo).asignarIndice(posicHijo);//le cambio los indices a los intercambiados
+        elementos.get(posicPadre).asignarIndice(posicPadre);
+    }
+
+    private void siftDown(int indice) {//voy bajando elelem en el heap cuando alguno de sus hijos tiene mayor prioridad
+        int hijoIzq =(2*indice)+1;//busco uno de los hijos
+        while (hijoIzq < cantidad) {//aca veo que existe tal hijo izq, va a tenr wue ser menor que la cantidad de elems
+            int hijoMayor =hijoIzq;
+            int hijoDer = hijoIzq +1;
+            if ((hijoDer<cantidad) && comparar(elementos.get(hijoDer), elementos.get(hijoIzq)) >0) {
+                hijoMayor = hijoDer;
             }
-            if (actual.valor.compareTo(mayor.valor) >= 0) {
+            if (comparar(elementos.get(hijoMayor), elementos.get(indice)) >0) {
+                intercambiar(indice, hijoMayor);
+                indice=hijoMayor;
+                hijoIzq = (2*indice) +1;
+            } else {
                 return;
             }
-            intercambiar(actual, mayor);//si el padre es mnor que elhijo, intercambio
-            actual = mayor;//sigo bajando
         }
-    }//uso este metodo luego para lo casos en los que la raiz quede menor que algun hijo luego e una transaccion
-
-    public T maximo() {
-        return raiz.valor;
     }
 
-    private  void actualizar(NodoHeap actual) {
-        if (actual.padre != null && actual.valor.compareTo(actual.padre.valor) > 0) {
-            siftUp(actual);
-        } else {
-            siftDown(actual);
+    public void actualizar(HandleHeap<T> handle) {
+        int indice =handle.obtenerIndice();
+        siftUp(indice);
+        siftDown(handle.obtenerIndice());
+    }
+
+    public void eliminarEn(int indice) {
+        if (indice < 0 || indice>= cantidad) {
+            return;
         }
+        intercambiar(indice, cantidad-1);
+        HandleHeap<T> eliminado = elementos.remove(cantidad-1);
+        cantidad-=1;
+        eliminado.asignarHeap(null);
+        
+        if (indice < cantidad) {
+            HandleHeap<T> elementoMovido = elementos.get(indice);
+            siftUp(indice);
+            siftDown(elementoMovido.obtenerIndice());
+            //esto porque el ultimo elemento cambio deposicion y tengo que verificar o retomar el equilibrio
+        }
+    }
+    public int cantDeElems() {
+        return cantidad;
+    }
+
+    public T devolverMaximo() {
+        if (cantidad==0) {
+            return null;
+        }
+        return elementos.get(0).valor();
     }
 
 }
