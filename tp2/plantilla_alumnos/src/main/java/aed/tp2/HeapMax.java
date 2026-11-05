@@ -88,6 +88,9 @@ public class HeapMax<T>{
     public int cantDeElems() {
         return cantidad;
     }
+    public ArrayList<HandleHeap<T>> arrayDeRanking() {
+        return elementos;
+    }
 
     public T devolverMaximo() {
         if (cantidad==0) {
