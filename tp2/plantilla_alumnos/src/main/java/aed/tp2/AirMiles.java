@@ -75,10 +75,9 @@ public class AirMiles implements SistemaAirMiles {
     }
 
     public void canjearMillas(int id, double cantidad) {
-    
         Usuario usuario = usuarios.buscarUsuarioPorID(id);
         if (usuario.millas_disponibles < cantidad) {
-        return;
+            return;
         }
         usuario.millas_disponibles -= cantidad;
         usuario.millas_gastadas += cantidad;
@@ -100,7 +99,7 @@ public class AirMiles implements SistemaAirMiles {
         origenID.millas_gastadas += cantidad;
 
         destinoID.millas_disponibles += cantidad;//tengo entendido que solo se modifican las disponibles
-        }
+        
         if (origenID.millas_gastadas > maxMillasGastadas){//me actualiza los punteros del mas canjeador 
             maxMillasGastadas = origenID.millas_gastadas;
             idMayorCanjeador = origenID.identificador;
