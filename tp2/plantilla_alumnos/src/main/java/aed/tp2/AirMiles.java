@@ -2,14 +2,18 @@ package aed.tp2;
 
 public class AirMiles implements SistemaAirMiles {
     private ABB<Usuario> usuarios;
+    private Trie<Promo> promociones;
 
     public AirMiles() {
         this.usuarios = new ABB<>();
+        this.promociones = new Trie<Promo>();
+        Promo predeterminada = new Promo(1.0);
+        this.promociones.insertar("NoPromo", predeterminada);
     }
 
     public void registrarUsuario(int id) {
         if (buscarUsuarioPorID(id)!=null){
-            throw new UnsupportedOperationException("el usuario ya pertenece al sistema");
+            throw new UnsupportedOperationException("el usuario ya pertenece al sistema");   // arreglar esto 
         }
         Usuario u = new Usuario(id);  
         usuarios.insertar(u);
@@ -17,7 +21,7 @@ public class AirMiles implements SistemaAirMiles {
 
     public void registrarUsuarioConReferidor(int id, int ref) {
         if (buscarUsuarioPorID(id)!=null){
-            throw new UnsupportedOperationException("el usuario ya pertenece al sistema");
+            throw new UnsupportedOperationException("el usuario ya pertenece al sistema");    // arreglar esto 
         }
         Usuario u = new Usuario(id);
         Usuario referidor = buscarUsuarioPorID(ref); 
@@ -34,7 +38,7 @@ public class AirMiles implements SistemaAirMiles {
     }
 
     public void acumularMillas(int id, double distancia, String nombrePromo) {
-        throw new UnsupportedOperationException("Sin implementar");
+        
     }
 
     public void canjearMillas(int id, double cantidad) {
@@ -51,7 +55,17 @@ public class AirMiles implements SistemaAirMiles {
     }
 
     public String consultarCategoria(int id) {
-       throw new UnsupportedOperationException("Sin implementar");
+        Usuario u= buscarUsuarioPorID(id);
+        double totales = u.millas_totales;
+        String res = "Platino";
+        if (totales < 10000){
+            res = "Bronce";
+        } if (10000 <= totales && totales < 50000){
+            res = "Plata";
+        } if(50000 <= totales && totales < 1000000){
+            res = "Oro";
+        }
+        return res; 
     }
 
     public int[] rankingMillas(int n) {
@@ -59,15 +73,17 @@ public class AirMiles implements SistemaAirMiles {
     }
 
     public void iniciarPromocion(String nombre, double factor) {
-        throw new UnsupportedOperationException("Sin implementar");
+        Promo nuevaPromo = new Promo(factor);
+        promociones.insertar(nombre, nuevaPromo);
     }
 
     public void iniciarPromocionConTope(String nombre, double factor, double tope) {
-        throw new UnsupportedOperationException("Sin implementar");
+        Promo nuevaPromo = new Promo(factor, tope);
+        promociones.insertar(nombre, nuevaPromo);
     }
 
     public void finalizarPromocion(String nombre) {
-        throw new UnsupportedOperationException("Sin implementar");
+        promociones.eliminar(promo); 
     }
 
     public int elMasAcumulador() {
@@ -102,6 +118,18 @@ public class AirMiles implements SistemaAirMiles {
         }
     }
 
+    public double factorCategoria(String categoria){
+        double res = 0;   //Platino 
+        if (categoria == "Bronce"){
+            res = 1.0;
+        } if(categoria == "Plata"){
+            res = 1.5;
+        } if(categoria == "Oro"){
+            res = 2.0;
+        }
+        return res; 
+    }
+    
 }
 
 

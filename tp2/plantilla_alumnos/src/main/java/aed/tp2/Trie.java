@@ -1,10 +1,10 @@
 package aed.tp2;
 
 public class Trie<T> {
-    private Nodo<T> raiz; 
+    private Nodo raiz; 
 
-    private class Nodo<T> {
-        Nodo<T>[] hijos;   
+    private class Nodo {
+        Nodo[] hijos;   
         T valor;
 
         Nodo() {                     // 52 es la cantidad de letras min y masy
