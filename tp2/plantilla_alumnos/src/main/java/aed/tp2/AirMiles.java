@@ -75,7 +75,7 @@ public class AirMiles implements SistemaAirMiles {
     }
 
     public void canjearMillas(int id, double cantidad) {
-        Usuario usuario = usuarios.buscarUsuarioPorID(id);
+        Usuario usuario = buscarUsuarioPorID(id);
         if (usuario.millas_disponibles < cantidad) {
             return;
         }
@@ -89,8 +89,8 @@ public class AirMiles implements SistemaAirMiles {
         }
 
     public void transferirMillas(int origen, int destino, double cantidad) {
-        Usuario origenID = usuarios.buscarUsuarioPorID (origen);
-        Usuario destinoID = usuarios.buscarUsuarioPorID(destino);
+        Usuario origenID = buscarUsuarioPorID (origen);
+        Usuario destinoID = buscarUsuarioPorID(destino);
 
         if (origenID.millas_disponibles < cantidad){
             return;
