@@ -7,7 +7,7 @@ public class Promo{
 
     public Promo(double f){  // promocionActiva
         factor = f;
-        tope = 0;   // como tope >0 entonces cuando sea 0 indica es promoActiva (?) revisar
+        tope = 0;   // como tope >0 entonces cuando sea 0 indica es promoActiva 
         acumulacionMillas = 0;  //ver en acumularMillas cuandos sean iguales 
     }
 

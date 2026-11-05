@@ -48,7 +48,23 @@ public class AirMiles implements SistemaAirMiles {
     }
 
     public void acumularMillas(int id, double distancia, String nombrePromo) {
-        
+        Usuario u = busacarUsuarioPorId(id);
+        Promo p = promociones.obtenerValor(nombrePromo);
+        double factorPromocion = factorPromo(nombrePromo);
+        String categoriaU = consultarCategoria(id);
+        double factorCatU = factorCategoria(categoriaU);
+
+        double millasGanadas = distancia*factorCatU*factorPromocion;
+
+        u.millas_totales += millasGanadas;
+        u.millas_disponibles += millasGanadas;
+
+        if (p != null && p.tope != 0){   // => esPromoConTope
+            p.acumulacionMillas += millasGanadas;
+            if (p.acumulacionMillas >= p.tope) {
+                promociones.eliminar(nombrePromo);
+            }
+        }
     }
 
     public void canjearMillas(int id, double cantidad) {
@@ -138,6 +154,14 @@ public class AirMiles implements SistemaAirMiles {
             res = 2.0;
         }
         return res; 
+    }
+
+    public double factorPromo(String promo){
+        Promo p = promociones.obtenerValor(promo);
+        if (p==null){
+            return 1.0; // la promo no esta activa o alcanzo el tope
+        }
+        return p.factor;
     }
     
 }
