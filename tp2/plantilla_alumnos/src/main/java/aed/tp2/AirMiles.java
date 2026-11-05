@@ -127,7 +127,14 @@ public class AirMiles implements SistemaAirMiles {
     }
 
     public int[] rankingMillas(int n) {
-        throw new UnsupportedOperationException("Sin implementar");
+        int[] res;
+        if(ranking.cantDeElems() < n) {
+            res = new int[ranking.cantDeElems()];
+        } else {
+            res = new int[n];
+        }
+        //codigo
+        return res;
     }
 
     public void iniciarPromocion(String nombre, double factor) {
@@ -153,6 +160,7 @@ public class AirMiles implements SistemaAirMiles {
     }
 
     public int[][] paresTransferidoresExclusivos() {
+        
         throw new UnsupportedOperationException("Sin implementar");
     }
 
