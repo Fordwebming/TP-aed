@@ -67,7 +67,7 @@ public class AirMiles implements SistemaAirMiles {
                 promociones.eliminar(nombrePromo);
             }
         }
-
+        ranking.actualizar(u.handleRanking);
     }
 
     public void canjearMillas(int id, double cantidad) {
