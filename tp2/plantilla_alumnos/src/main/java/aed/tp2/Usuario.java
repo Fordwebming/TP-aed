@@ -5,6 +5,10 @@ public class Usuario implements Comparable<Usuario> {
     public double millas_totales;
     public double millas_disponibles;
     public HandleHeap<Usuario> handleRanking;
+    public boolean recibioExclusivamente;
+    public boolean transfirioExclusivamente;
+    public int unicoUsuarioDelQRecibe;
+    public int unicoUsuarioAlQTransfiere;
 
     public Usuario(int identificador) {
         this.identificador = identificador;
