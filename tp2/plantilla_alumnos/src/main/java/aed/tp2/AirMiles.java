@@ -4,6 +4,8 @@ public class AirMiles implements SistemaAirMiles {
     private ABB<Usuario> usuarios;
     private Trie<Promo> promociones;
     private HeapMax<Usuario> ranking;
+    private double maxMillasGastadas;
+    private int  idMayorCanjeador;
 
     public AirMiles() {
         this.usuarios = new ABB<>();
@@ -12,6 +14,8 @@ public class AirMiles implements SistemaAirMiles {
         this.promociones.insertar("NoPromo", predeterminada);
         ComparadorUsuarios comparador = new ComparadorUsuarios();
         ranking = new HeapMax<>(comparador);
+        this.maxMillasGastadas = 0 
+        this.idMayorCanjeador = -1;
     }
 
     public void registrarUsuario(int id) {
@@ -71,11 +75,37 @@ public class AirMiles implements SistemaAirMiles {
     }
 
     public void canjearMillas(int id, double cantidad) {
-        throw new UnsupportedOperationException("Sin implementar");
-    }
+    
+        Usuario usuario = usuarios.buscarUsuarioPorID(id);
+        if (usuario.millas_disponibles < cantidad) {
+        return;
+        }
+        usuario.millas_disponibles -= cantidad;
+        usuario.millas_gastadas += cantidad;
+
+        if (usuario.millas_gastadas > maxMillasGastadas) {//me sirve para modificar los punteros q usa el mas canjeador
+            maxMillasGastadas = usuario.millas_gastadas;
+            idMayorCanjeador = usuario.identificador;
+            }
+        }
 
     public void transferirMillas(int origen, int destino, double cantidad) {
-        throw new UnsupportedOperationException("Sin implementar");
+        Usuario origenID = usuarios.buscarUsuarioPorID (origen);
+        Usuario destinoID = usuarios.buscarUsuarioPorID(destino);
+
+        if (origenID.millas_disponibles < cantidad){
+            return;
+        }
+        origenID.millas_disponibles -= cantidad;
+        origenID.millas_gastadas += cantidad;
+
+        destinoID.millas_disponibles += cantidad;//tengo entendido que solo se modifican las disponibles
+        }
+        if (origenID.millas_gastadas > maxMillasGastadas){//me actualiza los punteros del mas canjeador 
+            maxMillasGastadas = origenID.millas_gastadas;
+            idMayorCanjeador = origenID.identificador;
+
+        }
     }
 
     public double consultarSaldo(int id) {
