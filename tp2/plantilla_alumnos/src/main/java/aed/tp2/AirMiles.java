@@ -14,7 +14,7 @@ public class AirMiles implements SistemaAirMiles {
         this.promociones.insertar("NoPromo", predeterminada);
         ComparadorUsuarios comparador = new ComparadorUsuarios();
         ranking = new HeapMax<>(comparador);
-        this.maxMillasGastadas = 0 
+        this.maxMillasGastadas = 0;
         this.idMayorCanjeador = -1;
     }
 
