@@ -4,6 +4,7 @@ public class Usuario implements Comparable<Usuario> {
     public int identificador;  //los atributos son publicos para poder usarlos en la clase nodo del ABB de usuarios
     public double millas_totales;
     public double millas_disponibles;
+    public double millas_gastadas;
     public HandleHeap<Usuario> handleRanking;
     public boolean recibioExclusivamente;
     public boolean transfirioExclusivamente;
@@ -14,6 +15,7 @@ public class Usuario implements Comparable<Usuario> {
         this.identificador = identificador;
         this.millas_totales = 0;
         this.millas_disponibles = 0;
+        this.millas_gastadas = 0;
         handleRanking = null;
     }
     
