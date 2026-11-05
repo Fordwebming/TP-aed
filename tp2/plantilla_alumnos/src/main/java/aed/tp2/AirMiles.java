@@ -48,7 +48,7 @@ public class AirMiles implements SistemaAirMiles {
     }
 
     public void acumularMillas(int id, double distancia, String nombrePromo) {
-        Usuario u = busacarUsuarioPorId(id);
+        Usuario u = buscarUsuarioPorID(id);
         Promo p = promociones.obtenerValor(nombrePromo);
         double factorPromocion = factorPromo(nombrePromo);
         String categoriaU = consultarCategoria(id);
