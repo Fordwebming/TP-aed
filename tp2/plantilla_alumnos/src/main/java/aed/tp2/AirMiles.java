@@ -23,6 +23,7 @@ public class AirMiles implements SistemaAirMiles {
         HandleHeap<Usuario> handle =new HandleHeap<Usuario>(u);//agrego estas 3 lineas para registrando en el heap
         handle.asignarHeap(ranking);
         ranking.insertar(handle);
+        u.handleRanking=handle;
     }
 
     public void registrarUsuarioConReferidor(int id, int ref) {
@@ -44,6 +45,7 @@ public class AirMiles implements SistemaAirMiles {
         HandleHeap<Usuario> handle =new HandleHeap<Usuario>(u);
         handle.asignarHeap(ranking);
         ranking.insertar(handle);
+        u.handleRanking=handle;
 
     }
 
@@ -65,6 +67,7 @@ public class AirMiles implements SistemaAirMiles {
                 promociones.eliminar(nombrePromo);
             }
         }
+
     }
 
     public void canjearMillas(int id, double cantidad) {
