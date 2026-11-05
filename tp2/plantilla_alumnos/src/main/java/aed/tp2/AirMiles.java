@@ -130,8 +130,18 @@ public class AirMiles implements SistemaAirMiles {
         int[] res;
         if(ranking.cantDeElems() < n) {
             res = new int[ranking.cantDeElems()];
+            int i = 0;
+            while (i<ranking.cantDeElems()) {
+                res[i] = ranking.arrayDeRanking().get(i).valor().identificador;
+                i+=1;
+            }
         } else {
             res = new int[n];
+            int i = 0;
+            while (i<n) {
+                res[i] = ranking.arrayDeRanking().get(i).valor().identificador;
+                i+=1;
+            }
         }
         //codigo
         return res;
