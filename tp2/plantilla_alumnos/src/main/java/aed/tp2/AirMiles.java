@@ -101,6 +101,18 @@ public class AirMiles implements SistemaAirMiles {
         }
         ranking.actualizar(origenID.handleRanking);//en estas dos lineas actualizo el heap ya que para uno aumenta y para el otro disminuye
         ranking.actualizar(destinoID.handleRanking);
+
+        if (origenID.unicoUsuarioAlQTransfiere < 0) {//registro si los usuarios siempre transfieren a uno solo
+            origenID.unicoUsuarioAlQTransfiere = destino;
+        } else if (origenID.unicoUsuarioAlQTransfiere != destino) {
+            origenID.transfirioExclusivamente = false;
+        }
+
+        if (destinoID.unicoUsuarioDelQRecibe < 0) {//registro si un usuario recibe siempre del mismo
+            destinoID.unicoUsuarioDelQRecibe = origen;
+        } else if (destinoID.unicoUsuarioDelQRecibe != origen) {
+            destinoID.recibioExclusivamente = false;
+        }
     }
 
     public double consultarSaldo(int id) {

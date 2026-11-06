@@ -17,6 +17,11 @@ public class Usuario implements Comparable<Usuario> {
         this.millas_disponibles = 0;
         this.millas_gastadas = 0;
         handleRanking = null;
+
+        recibioExclusivamente = true;
+        transfirioExclusivamente = true;
+        unicoUsuarioDelQRecibe = -1;
+        unicoUsuarioAlQTransfiere = -1;
     }
     
     public int compareTo(Usuario otro){
