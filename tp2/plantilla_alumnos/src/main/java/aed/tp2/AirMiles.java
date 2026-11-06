@@ -43,6 +43,7 @@ public class AirMiles implements SistemaAirMiles {
         handle.asignarHeap(ranking);
         ranking.insertar(handle);
         u.handleRanking=handle;
+        ranking.actualizar(referidor.handleRanking);
 
     }
 
@@ -113,18 +114,10 @@ public class AirMiles implements SistemaAirMiles {
         } else if (destinoID.unicoUsuarioDelQRecibe != origen) {
             destinoID.recibioExclusivamente = false;
         }
-        //meter en auxilar
-        if((origenID.recibioExclusivamente && origenID.transfirioExclusivamente) && 
-        (origenID.unicoUsuarioAlQTransfiere != origenID.unicoUsuarioDelQRecibe)) {
-
-            origenID.esTransferidorExclusivo=false;
-        }
-
-        if((destinoID.recibioExclusivamente && destinoID.transfirioExclusivamente) && 
-        (destinoID.unicoUsuarioAlQTransfiere != destinoID.unicoUsuarioDelQRecibe)) {
-            
-            destinoID.esTransferidorExclusivo=false;
-        }//estos 2 if son para saber si cada usuario es transferidor exclusivo
+        
+        actualizarExclusividad(origenID);
+        actualizarExclusividad(destinoID);
+        
     }
 
     public double consultarSaldo(int id) {
@@ -196,21 +189,48 @@ public class AirMiles implements SistemaAirMiles {
     public int[][] paresTransferidoresExclusivos() {
         
         int[][] res;
-        int cantidadDeTranferidoresExclusivos=0;
         ArrayList<HandleHeap<Usuario>> arrayDeHandles =ranking.arrayDeRanking();
         Usuario[] arregloDeUsuarios = new Usuario[ranking.cantDeElems()];//me creo esta para poder acceder a todos los usuarios en O(U)
+        
+        //es este for obtengo los usuarios
         for(int i = 0; i<arregloDeUsuarios.length; i+=1) {
             Usuario usuario = arrayDeHandles.get(i).valor();
             arregloDeUsuarios[i] = usuario;
-            if (usuario.esTransferidorExclusivo) {
-                cantidadDeTranferidoresExclusivos+=1;
-            }
         }
         
-        for(int i=0; i < arregloDeUsuarios.length; i+=1) {
-            //codigo
+        //aca cuento los pares que voy a tener
+        int cantDePares =0;
+        for (int i =0; i < arregloDeUsuarios.length; i+=1) {
+            Usuario usuario =arregloDeUsuarios[i];
+            if (usuario.esTransferidorExclusivo) {
+                Usuario otro = usuario.obtenerUsuarioExclusivo();
+                if(otro != null && otro.esTransferidorExclusivo &&
+                    otro.obtenerUsuarioExclusivo().identificador == usuario.identificador &&
+                    usuario.identificador< otro.identificador) {//para no agregar dos veces el mismo par
+                        cantDePares +=1;
+                    }
+            }
         }
-        return null;//falta
+
+        //armo bien los pares y los pongo en res
+        res = new int[cantDePares][2];
+        int indice=0;
+        for (int i=0; i<arregloDeUsuarios.length;i+=1) {
+            Usuario usuario = arregloDeUsuarios[i];
+            if (usuario.esTransferidorExclusivo) {
+                Usuario otro =usuario.obtenerUsuarioExclusivo();
+                if (otro != null && otro.esTransferidorExclusivo &&
+                    otro.obtenerUsuarioExclusivo().identificador == usuario.identificador &&
+                    usuario.identificador < otro.identificador) {
+                    res[indice][0]= usuario.identificador;
+                    res[indice][1]= otro.identificador;
+
+                    indice+=1;
+                }
+            }
+        }
+            
+        return res;
     }
 
     //metodos auxiliares
@@ -251,6 +271,21 @@ public class AirMiles implements SistemaAirMiles {
             return 1.0; // la promo no esta activa o alcanzo el tope
         }
         return p.factor;
+    }
+    private void actualizarExclusividad(Usuario u) {
+
+        if (u.recibioExclusivamente && u.transfirioExclusivamente &&
+            u.unicoUsuarioDelQRecibe != -1 && u.unicoUsuarioAlQTransfiere != -1 &&
+            u.unicoUsuarioDelQRecibe == u.unicoUsuarioAlQTransfiere) {
+
+            u.esTransferidorExclusivo = true;
+            u.asignarUsuarioExclusivo(buscarUsuarioPorID(u.unicoUsuarioDelQRecibe));
+
+        } else {
+
+            u.esTransferidorExclusivo = false;
+            u.asignarUsuarioExclusivo(null);
+        }
     }
     
 }

@@ -11,6 +11,8 @@ public class Usuario implements Comparable<Usuario> {
     public int unicoUsuarioDelQRecibe;
     public int unicoUsuarioAlQTransfiere;
     public boolean esTransferidorExclusivo;
+    private Usuario usuarioExclusivo;
+
 
     public Usuario(int identificador) {
         this.identificador = identificador;
@@ -18,16 +20,25 @@ public class Usuario implements Comparable<Usuario> {
         this.millas_disponibles = 0;
         this.millas_gastadas = 0;
         handleRanking = null;
+        usuarioExclusivo=null;
 
         recibioExclusivamente = true;
         transfirioExclusivamente = true;
         unicoUsuarioDelQRecibe = -1;
         unicoUsuarioAlQTransfiere = -1;
-        esTransferidorExclusivo = true;
+        esTransferidorExclusivo = false;
     }
     
     public int compareTo(Usuario otro){
         return Integer.compare(this.identificador, otro.identificador);
+    }
+
+    public Usuario obtenerUsuarioExclusivo() {
+        return usuarioExclusivo;
+    }
+
+    public void asignarUsuarioExclusivo(Usuario u) {
+        usuarioExclusivo=u;
     }
 }
 
