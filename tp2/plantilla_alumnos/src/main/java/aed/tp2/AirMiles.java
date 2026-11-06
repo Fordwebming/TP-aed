@@ -283,15 +283,29 @@ public class AirMiles implements SistemaAirMiles {
     }
     private void actualizarExclusividad(Usuario u) {
 
-        if (u.recibioExclusivamente && u.transfirioExclusivamente &&
-            u.unicoUsuarioDelQRecibe != -1 && u.unicoUsuarioAlQTransfiere != -1 &&
-            u.unicoUsuarioDelQRecibe == u.unicoUsuarioAlQTransfiere) {
+        if (u.recibioExclusivamente && u.transfirioExclusivamente && 
+            (u.unicoUsuarioDelQRecibe != -1 || u.unicoUsuarioAlQTransfiere != -1)) {
 
-            u.esTransferidorExclusivo = true;
-            u.asignarUsuarioExclusivo(buscarUsuarioPorID(u.unicoUsuarioDelQRecibe));
+            int idExclusivo;
+
+            if (u.unicoUsuarioDelQRecibe != -1) {
+                idExclusivo = u.unicoUsuarioDelQRecibe;
+            } else {
+                idExclusivo = u.unicoUsuarioAlQTransfiere;
+            }
+
+            if (u.unicoUsuarioDelQRecibe != -1 && u.unicoUsuarioAlQTransfiere != -1 &&
+                u.unicoUsuarioDelQRecibe != u.unicoUsuarioAlQTransfiere) {
+
+                u.esTransferidorExclusivo = false;
+                u.asignarUsuarioExclusivo(null);
+
+            } else {
+                u.esTransferidorExclusivo = true;
+                u.asignarUsuarioExclusivo(buscarUsuarioPorID(idExclusivo));
+            }
 
         } else {
-
             u.esTransferidorExclusivo = false;
             u.asignarUsuarioExclusivo(null);
         }
