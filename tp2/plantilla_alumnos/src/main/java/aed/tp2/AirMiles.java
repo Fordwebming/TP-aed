@@ -24,6 +24,9 @@ public class AirMiles implements SistemaAirMiles {
     }
 
     public void registrarUsuario(int id) {
+        if (buscarUsuarioPorID(id) != null){
+            throw new UnsupportedOperationException ("el usuario ya pertenece al sistema");
+        }
         
         Usuario u = new Usuario(id);  
         usuarios.insertar(u);
@@ -35,8 +38,16 @@ public class AirMiles implements SistemaAirMiles {
     }
 
     public void registrarUsuarioConReferidor(int id, int ref) {
-        Usuario u = new Usuario(id);
+        if (buscarUsuarioPorID(id) != null){
+            throw new UnsupportedOperationException ("el usuario ya pertenece al sistema");
+        }
+        
         Usuario referidor = buscarUsuarioPorID(ref); 
+        if (referidor == null){
+            throw new UnsupportedOperationException ("el referidor no pertenece al sistema");
+        }
+        
+        Usuario u = new Usuario(id);
         u.millas_disponibles += 500;
         u.millas_totales += 500;  
         usuarios.insertar(u);
