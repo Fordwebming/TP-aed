@@ -113,6 +113,18 @@ public class AirMiles implements SistemaAirMiles {
         } else if (destinoID.unicoUsuarioDelQRecibe != origen) {
             destinoID.recibioExclusivamente = false;
         }
+        //meter en auxilar
+        if((origenID.recibioExclusivamente && origenID.transfirioExclusivamente) && 
+        (origenID.unicoUsuarioAlQTransfiere != origenID.unicoUsuarioDelQRecibe)) {
+
+            origenID.esTransferidorExclusivo=false;
+        }
+
+        if((destinoID.recibioExclusivamente && destinoID.transfirioExclusivamente) && 
+        (destinoID.unicoUsuarioAlQTransfiere != destinoID.unicoUsuarioDelQRecibe)) {
+            
+            destinoID.esTransferidorExclusivo=false;
+        }//estos 2 if son para saber si cada usuario es transferidor exclusivo
     }
 
     public double consultarSaldo(int id) {
@@ -183,7 +195,22 @@ public class AirMiles implements SistemaAirMiles {
 
     public int[][] paresTransferidoresExclusivos() {
         
-        throw new UnsupportedOperationException("Sin implementar");
+        int[][] res;
+        int cantidadDeTranferidoresExclusivos=0;
+        ArrayList<HandleHeap<Usuario>> arrayDeHandles =ranking.arrayDeRanking();
+        Usuario[] arregloDeUsuarios = new Usuario[ranking.cantDeElems()];//me creo esta para poder acceder a todos los usuarios en O(U)
+        for(int i = 0; i<arregloDeUsuarios.length; i+=1) {
+            Usuario usuario = arrayDeHandles.get(i).valor();
+            arregloDeUsuarios[i] = usuario;
+            if (usuario.esTransferidorExclusivo) {
+                cantidadDeTranferidoresExclusivos+=1;
+            }
+        }
+        
+        for(int i=0; i < arregloDeUsuarios.length; i+=1) {
+            //codigo
+        }
+        return null;//falta
     }
 
     //metodos auxiliares

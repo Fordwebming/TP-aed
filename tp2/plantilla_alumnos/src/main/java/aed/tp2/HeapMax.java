@@ -33,6 +33,8 @@ public class HeapMax<T>{
             if (comparar(elementos.get(indice), elementos.get(padre)) >0) {//comparo si el hijo es mayor que el padre
                 intercambiar(indice, padre);
                 indice=padre;//voy subiendo hasta llegar a la raiz donde no hay mas padre
+            } else {
+                return;
             }
         }
     }

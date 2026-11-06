@@ -10,6 +10,7 @@ public class Usuario implements Comparable<Usuario> {
     public boolean transfirioExclusivamente;
     public int unicoUsuarioDelQRecibe;
     public int unicoUsuarioAlQTransfiere;
+    public boolean esTransferidorExclusivo;
 
     public Usuario(int identificador) {
         this.identificador = identificador;
@@ -22,6 +23,7 @@ public class Usuario implements Comparable<Usuario> {
         transfirioExclusivamente = true;
         unicoUsuarioDelQRecibe = -1;
         unicoUsuarioAlQTransfiere = -1;
+        esTransferidorExclusivo = true;
     }
     
     public int compareTo(Usuario otro){
