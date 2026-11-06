@@ -1,4 +1,5 @@
 package aed.tp2;
+import java.util.ArrayList;
 
 public class AirMiles implements SistemaAirMiles {
     private ABB<Usuario> usuarios;
@@ -125,20 +126,24 @@ public class AirMiles implements SistemaAirMiles {
         int[] res;
         if(ranking.cantDeElems() < n) {
             res = new int[ranking.cantDeElems()];
-            int i = 0;
-            while (i<ranking.cantDeElems()) {
-                res[i] = ranking.arrayDeRanking().get(i).valor().identificador;
-                i+=1;
-            }
+            
         } else {
             res = new int[n];
-            int i = 0;
-            while (i<n) {
-                res[i] = ranking.arrayDeRanking().get(i).valor().identificador;
-                i+=1;
-            }
         }
-        //codigo
+        ArrayList<HandleHeap<Usuario>> guardadoTemporal = new ArrayList<>();
+        for (int i=0; i<res.length; i+=1) {
+            Usuario usuarioRanking = ranking.devolverMaximo();
+            res[i] = usuarioRanking.identificador;
+            HandleHeap<Usuario> handleDeUsuario = usuarioRanking.handleRanking;
+            ranking.eliminarEn(0);//siempre elimino el primero para que avance al siguiente del rank
+            guardadoTemporal.add(handleDeUsuario);
+        }//voy sacando los handle del haep para luego volver a insertar en log n
+        for (int i = 0; i < res.length; i+=1) {//vuelo a insertar los handle que saque en log n
+            HandleHeap<Usuario> recuperoHandle = guardadoTemporal.get(i);
+            recuperoHandle.asignarHeap(ranking);
+            ranking.insertar(recuperoHandle);
+        }
+
         return res;
     }
 

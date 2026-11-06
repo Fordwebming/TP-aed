@@ -90,7 +90,7 @@ public class HeapMax<T>{
         return cantidad;
     }
     public ArrayList<HandleHeap<T>> arrayDeRanking() {
-        return elementos;
+        return elementos;//creo que no lo uso
     }
 
     public T devolverMaximo() {
