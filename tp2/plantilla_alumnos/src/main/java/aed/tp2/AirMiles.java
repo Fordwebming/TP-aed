@@ -31,6 +31,7 @@ public class AirMiles implements SistemaAirMiles {
         handle.asignarHeap(ranking);
         ranking.insertar(handle);
         u.handleRanking=handle;
+        actualizarMaxMillasTotales(u);
     }
 
     public void registrarUsuarioConReferidor(int id, int ref) {
