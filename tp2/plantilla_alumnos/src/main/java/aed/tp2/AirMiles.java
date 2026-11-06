@@ -77,8 +77,9 @@ public class AirMiles implements SistemaAirMiles {
         if (usuario.millas_gastadas > maxMillasGastadas) {//me sirve para modificar los punteros q usa el mas canjeador
             maxMillasGastadas = usuario.millas_gastadas;
             idMayorCanjeador = usuario.identificador;
-            }
         }
+        ranking.actualizar(usuario.handleRanking);
+    }
 
     public void transferirMillas(int origen, int destino, double cantidad) {
         Usuario origenID = buscarUsuarioPorID (origen);
@@ -97,6 +98,8 @@ public class AirMiles implements SistemaAirMiles {
             idMayorCanjeador = origenID.identificador;
 
         }
+        ranking.actualizar(origenID.handleRanking);
+        ranking.actualizar(destinoID.handleRanking);
     }
 
     public double consultarSaldo(int id) {
