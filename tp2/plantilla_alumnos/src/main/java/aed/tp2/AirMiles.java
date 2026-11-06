@@ -44,11 +44,11 @@ public class AirMiles implements SistemaAirMiles {
         referidor.millas_totales += 500;
         // como las constantes no cuentan para la complejidad puedo recorrer el arbol 3 veces sin romper la consigna
         //agrego las mismas lineas que en registrar usuario
+        ranking.actualizar(referidor.handleRanking);
         HandleHeap<Usuario> handle =new HandleHeap<Usuario>(u);
         handle.asignarHeap(ranking);
         ranking.insertar(handle);
         u.handleRanking=handle;
-        ranking.actualizar(referidor.handleRanking);
 
         actualizarMaxMillasTotales(u);
         actualizarMaxMillasTotales(referidor);
