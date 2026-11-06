@@ -98,7 +98,7 @@ public class AirMiles implements SistemaAirMiles {
             idMayorCanjeador = origenID.identificador;
 
         }
-        ranking.actualizar(origenID.handleRanking);
+        ranking.actualizar(origenID.handleRanking);//en estas dos lineas actualizo el heap ya que para uno aumenta y para el otro disminuye
         ranking.actualizar(destinoID.handleRanking);
     }
 

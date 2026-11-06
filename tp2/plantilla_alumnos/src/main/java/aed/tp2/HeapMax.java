@@ -77,6 +77,7 @@ public class HeapMax<T>{
         HandleHeap<T> eliminado = elementos.remove(cantidad-1);
         cantidad-=1;
         eliminado.asignarHeap(null);
+        eliminado.asignarIndice(-1);
         
         if (indice < cantidad) {
             HandleHeap<T> elementoMovido = elementos.get(indice);
