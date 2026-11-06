@@ -7,6 +7,8 @@ public class AirMiles implements SistemaAirMiles {
     private HeapMax<Usuario> ranking;
     private double maxMillasGastadas;
     private int  idMayorCanjeador;
+    private double maxMillasTotales;
+    private int idMasMillasTotales;
 
     public AirMiles() {
         this.usuarios = new ABB<>();
@@ -17,6 +19,8 @@ public class AirMiles implements SistemaAirMiles {
         ranking = new HeapMax<>(comparador);
         this.maxMillasGastadas = 0;
         this.idMayorCanjeador = -1;
+        this.idMasMillasTotales=-1;
+        this.maxMillasTotales=-1;//para indicar que todavia no hay ninguno registrado
     }
 
     public void registrarUsuario(int id) {
@@ -45,6 +49,9 @@ public class AirMiles implements SistemaAirMiles {
         u.handleRanking=handle;
         ranking.actualizar(referidor.handleRanking);
 
+        actualizarMaxMillasTotales(u);
+        actualizarMaxMillasTotales(referidor);
+
     }
 
     public void acumularMillas(int id, double distancia, String nombrePromo) {
@@ -66,6 +73,7 @@ public class AirMiles implements SistemaAirMiles {
             }
         }
         ranking.actualizar(u.handleRanking);
+        actualizarMaxMillasTotales(u);
     }
 
     public void canjearMillas(int id, double cantidad) {
@@ -179,11 +187,11 @@ public class AirMiles implements SistemaAirMiles {
     }
 
     public int elMasAcumulador() {
-        throw new UnsupportedOperationException("Sin implementar");
+        return idMasMillasTotales;
     }
 
     public int elMasCanjeador() {
-        throw new UnsupportedOperationException("Sin implementar");
+        return idMayorCanjeador;
     }
 
     public int[][] paresTransferidoresExclusivos() {
@@ -287,6 +295,14 @@ public class AirMiles implements SistemaAirMiles {
             u.asignarUsuarioExclusivo(null);
         }
     }
+
+    private void actualizarMaxMillasTotales(Usuario u) {
+        if (u.millas_totales > maxMillasTotales) {
+            maxMillasTotales = u.millas_totales;
+            idMasMillasTotales = u.identificador;
+        }
+    }
+
     
 }
 
