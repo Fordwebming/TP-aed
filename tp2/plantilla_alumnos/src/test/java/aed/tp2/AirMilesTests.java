@@ -626,4 +626,50 @@ public class AirMilesTests {
         am.canjearMillas(202,500);
         assertEquals(201, am.elMasAcumulador());
     }
+
+    @Test
+    void acumularConDistanciaDecimal() {
+        AirMiles am = new AirMiles();
+        am.registrarUsuario(1);
+        am.acumularMillas(1, 0.5, "NoPromo");
+        assertEquals(0.5, am.consultarSaldo(1));
+        am.acumularMillas(1, 0.9, "NoPromo");
+        assertEquals(1.4, am.consultarSaldo(1));
+    }
+    
+    @Test
+    void rankingConUnSoloUsuario() {
+        AirMiles am = new AirMiles();
+        am.registrarUsuario(1);
+        am.acumularMillas(1, 100, "NoPromo");
+        int[] top = am.rankingMillas(5);
+        assertEquals(1, top.length);
+        assertEquals(1, top[0]);
+    }
+    @Test
+    void rankingDespuesDeCanjearTodo() {
+        AirMiles am = new AirMiles();
+        am.registrarUsuario(1);
+        am.registrarUsuario(2);
+        am.acumularMillas(1, 500, "NoPromo");
+        am.acumularMillas(2, 300, "NoPromo");
+        am.canjearMillas(1, 500);   // 1 queda con 0
+        int[] top = am.rankingMillas(2);
+        assertEquals(2, top[0]);   // 2 tiene 300, 1 tiene 0
+        assertEquals(1, top[1]);
+    }
+
+        @Test
+    void elMasCanjeadorSoloConTransferencias() {
+        AirMiles am = new AirMiles();
+        am.registrarUsuario(1);
+        am.registrarUsuario(2);
+        am.acumularMillas(1, 1000, "NoPromo");
+        am.acumularMillas(2, 1, "NoPromo");
+        am.transferirMillas(1, 2, 500);   // gasto 500 (transferidas)
+        assertEquals(1, am.elMasCanjeador());
+        am.transferirMillas(2, 1, 501);
+        assertEquals(2, am.elMasCanjeador());   
+    }
+}
 }
