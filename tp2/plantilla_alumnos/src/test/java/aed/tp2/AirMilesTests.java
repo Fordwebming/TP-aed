@@ -605,4 +605,25 @@ public class AirMilesTests {
         assertEquals("Platino", am1.consultarCategoria(100));
         assertEquals(100000500, am1.buscarUsuarioPorID(100).millas_totales);
     }
+    @Test
+    void promoSinTopePrefijoDePromoConTope(){
+        am.registrarUsuario(200);
+        am.iniciarPromocion("PromoInvierno",2.0);
+        am.iniciarPromocionConTope("PromoInvernal", 5.0, 100);
+        am.acumularMillas(200,20,"PromoInvernal");
+        am.acumularMillas(200,10,"PromoInvierno");
+        assertEquals(120.0, am.consultarSaldo(200));
+    }
+    @Test
+    void canjearNoCambiaElMasAcumulador(){
+        am.registrarUsuario(201);
+        am.registrarUsuario(202);
+        am.acumularMillas(201,1000, "NoPromo");
+        am.acumularMillas(202, 500, "NoPromo");
+        am.canjearMillas(201, 1000);
+        assertEquals(0.0, am.consultarSaldo(201));
+        assertEquals(201, am.elMasAcumulador());
+        am.canjearMillas(202,500);
+        assertEquals(201, am.elMasAcumulador());
+    }
 }
