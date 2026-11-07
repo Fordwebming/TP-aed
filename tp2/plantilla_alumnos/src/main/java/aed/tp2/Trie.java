@@ -8,8 +8,9 @@ public class Trie<T> {
         T valor;
 
         Nodo() {                     // 52 es la cantidad de letras min y masy
-            hijos = new Nodo[52];   // valor que da null 
-        }
+            hijos = new Nodo[52];  
+            valor = null;           // empieza con valor null y cuando termina 
+        }                           // la palabra le guardo la promo 
     }
 
     public Trie() {
@@ -42,10 +43,10 @@ public class Trie<T> {
         return res;
     }
 
-    private Nodo<T> obtenerNodo(String palabra){
-        Nodo<T> actual = raiz;
+    public Nodo obtenerNodo(String palabra){  
+        Nodo actual = raiz;
         for (int i=0; i<palabra.length(); i++){
-            char caracter = palabra.charAt(i);
+            char caracter = palabra.charAt(i);  // devuelve el caracter que esta en la posicion i 
             int indice = obtenerIndice(caracter);
             actual = actual.hijos[indice];   // el if para que no tire error aca 
             if (actual == null){
@@ -55,21 +56,48 @@ public class Trie<T> {
         return actual;
     }
 
-    public boolean pertenece(String palabra){
-        return obtenerNodo(palabra) != null;
+    public boolean pertenece(String palabra){  
+        boolean res = false;   
+        Nodo p = obtenerNodo(palabra);
+        if (p != null && p.valor != null){
+            res = true;
+        }
+        return res; 
+    }
+
+    private boolean tieneHijos(Nodo n){
+        boolean res = false;
+        for (int i=0; i<n.hijos.length; i++){  // voy recorriendo el array aver si en esa posicion tiene un puntero (hijo)
+            if (n.hijos[i] != null){
+                res = true;
+            }
+        }
+        return res; 
+    }
+
+    private boolean eliminarRecursivamente(Nodo actual, String palabra, int i){
+        if (i < palabra.length()){
+            char caracter = palabra.charAt(i);
+            int indice = obtenerIndice(caracter);
+            if (eliminarRecursivamente(actual.hijos[indice], palabra, i+1 )){    // ahora va subiendo 
+                actual.hijos[indice] = null;    // corto el puntero al hijo que quedo sin valor y sin hijos 
+            }
+        }
+        return actual.valor == null && tieneHijos(actual) == false;   // cuando llegue a la ultima letra que le pusimos en eliminar null 
     }
 
     public void eliminar(String palabra) {
-        if (pertenece(palabra)){
-            Nodo<T> actual = obtenerNodo(palabra);
+        if (pertenece(palabra)){                        
+            Nodo actual = obtenerNodo(palabra);    
             actual.valor = null;
+            eliminarRecursivamente(raiz, palabra, 0);   // va desde la raiz al ultimo nodo 
         }
     }
 
     public T obtenerValor(String palabra){
         T res = null;
         if (pertenece(palabra)){
-            Nodo<T> actual = obtenerNodo(palabra);
+            Nodo actual = obtenerNodo(palabra);  
             res = actual.valor;
         }
         return res; 
