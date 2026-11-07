@@ -1,30 +1,31 @@
 package aed.tp2;
 
 public class Trie<T> {
-    private Nodo raiz; 
+    private Nodo<T> raiz; 
 
-    private class Nodo {
-        Nodo[] hijos;   
+    private static class Nodo<T> {          // con static el Nodo es independiente del Trie    
+        Nodo<T>[] hijos;                    // entonces el nodo tiene que declarar su propio T que es el mismo T del Trie 
         T valor;
-
-        Nodo() {                     // 52 es la cantidad de letras min y masy
-            hijos = new Nodo[52];  
-            valor = null;           // empieza con valor null y cuando termina 
-        }                           // la palabra le guardo la promo 
+                                            // como java no deja crear arrays genericos lo casteo (Nodo<T>[])        
+        @SuppressWarnings("unchecked")      // Trie.Nodo --> xq el nodo es una clase interna del Trie 
+        Nodo() {                     
+            hijos = (Nodo<T>[]) new Trie.Nodo[52];   // 52 es la cantidad de letras min y masy
+            valor = null;               // empieza con valor null y cuando termina la palabra le guardo la promo
+        }                          
     }
 
     public Trie() {
-        raiz = new Nodo();
+        raiz = new Nodo<T>();
     }
 
     public void insertar(String palabra, T elem){
-        Nodo actual = raiz; 
+        Nodo<T> actual = raiz; 
         for (int i=0; i<palabra.length(); i++){
             char caracter = palabra.charAt(i);
             int indice = obtenerIndice(caracter);
 
             if (actual.hijos[indice] == null){
-                actual.hijos[indice] = new Nodo();
+                actual.hijos[indice] = new Nodo<T>();
             }
             actual = actual.hijos[indice];
         }
@@ -43,8 +44,8 @@ public class Trie<T> {
         return res;
     }
 
-    public Nodo obtenerNodo(String palabra){  
-        Nodo actual = raiz;
+    public Nodo<T> obtenerNodo(String palabra){  
+        Nodo<T> actual = raiz;
         for (int i=0; i<palabra.length(); i++){
             char caracter = palabra.charAt(i);  // devuelve el caracter que esta en la posicion i 
             int indice = obtenerIndice(caracter);
@@ -58,14 +59,14 @@ public class Trie<T> {
 
     public boolean pertenece(String palabra){  
         boolean res = false;   
-        Nodo p = obtenerNodo(palabra);
+        Nodo<T> p = obtenerNodo(palabra);
         if (p != null && p.valor != null){
             res = true;
         }
         return res; 
     }
 
-    private boolean tieneHijos(Nodo n){
+    private boolean tieneHijos(Nodo<T> n){
         boolean res = false;
         for (int i=0; i<n.hijos.length; i++){  // voy recorriendo el array aver si en esa posicion tiene un puntero (hijo)
             if (n.hijos[i] != null){
@@ -75,7 +76,7 @@ public class Trie<T> {
         return res; 
     }
 
-    private boolean eliminarRecursivamente(Nodo actual, String palabra, int i){
+    private boolean eliminarRecursivamente(Nodo<T> actual, String palabra, int i){
         if (i < palabra.length()){
             char caracter = palabra.charAt(i);
             int indice = obtenerIndice(caracter);
@@ -88,16 +89,16 @@ public class Trie<T> {
 
     public void eliminar(String palabra) {
         if (pertenece(palabra)){                        
-            Nodo actual = obtenerNodo(palabra);    
+            Nodo<T> actual = obtenerNodo(palabra);    
             actual.valor = null;
-            eliminarRecursivamente(raiz, palabra, 0);   // va desde la raiz al ultimo nodo 
+            eliminarRecursivamente(raiz, palabra, 0);   // va desde la raiz al ultimo Nodo<T> 
         }
     }
 
     public T obtenerValor(String palabra){
         T res = null;
         if (pertenece(palabra)){
-            Nodo actual = obtenerNodo(palabra);  
+            Nodo<T> actual = obtenerNodo(palabra);  
             res = actual.valor;
         }
         return res; 
