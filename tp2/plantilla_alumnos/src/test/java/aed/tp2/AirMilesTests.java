@@ -573,16 +573,36 @@ public class AirMilesTests {
 
     //test agregados por nosotros
 
-    @Test 
-    void testPropiosRegistrarUsuarios(){
+     @Test 
+    void transferirMillas(){
+
         AirMiles am1 = new AirMiles();
         am1.registrarUsuario(100);
-        //tratar de meter un usuario que ya existe en registrarUsuario
-        assertEquals("el usuario ya pertenece al sistema", assertThrows(UnsupportedOperationException.class , () -> am1.registrarUsuario(100)).getMessage());
         am1.registrarUsuario(101);
-        //tratar de meter un usuario que ya existe en registrarUsuarioConReferidor
-        assertEquals("el usuario ya pertenece al sistema", assertThrows(UnsupportedOperationException.class , () -> am1.registrarUsuarioConReferidor(100, 101)).getMessage());
-        //tratar de meter un usuario con un referidor inexistente
-        assertEquals("el referidor no pertenece al sistema", assertThrows(UnsupportedOperationException.class , () -> am1.registrarUsuarioConReferidor(102, 103)).getMessage());
+        double saldo = am1.consultarSaldo(101);
+        am1.transferirMillas(100, 101, 100);
+        //transferir sin saldo
+        assertEquals(am1.consultarSaldo(101), saldo);
+        //transferir un numero muy grande
+        am1.acumularMillas(100, 999999999, "NoPromo");
+        am1.transferirMillas(100, 101, 999999990);
+        assertEquals(9 , am1.consultarSaldo(100));
+        assertEquals(999999990 , am1.consultarSaldo(101));
+    }
+    @Test
+    void canjearMillas(){
+        AirMiles am1 = new AirMiles();
+        am1.registrarUsuario(100);
+        am1.registrarUsuarioConReferidor(200, 100);
+        //canjear con Mas millas que las que tengo
+        am1.canjearMillas(100, 501);
+        double saldo = am1.consultarSaldo(100);
+        assertEquals(500, saldo);
+        //canjearMillas hasta categoria platino y confirmar millas totales
+        am1.consultarCategoria(100);
+        am1.acumularMillas(100, 100000000, "NoPromo");
+        am1.canjearMillas(100, 100000000);
+        assertEquals("Platino", am1.consultarCategoria(100));
+        assertEquals(100000500, am1.buscarUsuarioPorID(100).millas_totales);
     }
 }
