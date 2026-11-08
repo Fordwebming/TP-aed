@@ -670,7 +670,7 @@ public class AirMilesTests {
         assertEquals(1, am.elMasCanjeador());
         am.transferirMillas(2, 1, 501);
         assertEquals(2, am.elMasCanjeador());   
-        }
+        
     }
     @Test
     void parExclusivoIdaYVuelta() { // para verificar q al transferiri ida y vuelta no se duplica el par  no se rompe la exclusividad
