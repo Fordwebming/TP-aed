@@ -670,6 +670,34 @@ public class AirMilesTests {
         assertEquals(1, am.elMasCanjeador());
         am.transferirMillas(2, 1, 501);
         assertEquals(2, am.elMasCanjeador());   
+        }
     }
-}
+    @Test
+    void parExclusivoIdaYVuelta() { // para verificar q al transferiri ida y vuelta no se duplica el par  no se rompe la exclusividad
+        AirMiles am = new AirMiles();
+        am.registrarUsuario(1);
+        am.registrarUsuario(2);
+        am.acumularMillas(1, 1000, "NoPromo");
+        am.acumularMillas(2, 1000, "NoPromo");
+        am.transferirMillas(1, 2, 100);
+        am.transferirMillas(2, 1, 50);
+        int[][] pares = am.paresTransferidoresExclusivos();
+        assertEquals(1, pares.length);
+        int a = Math.min(pares[0][0], pares[0][1]);
+        int b = Math.max(pares[0][0], pares[0][1]);
+        assertEquals(1, a);
+        assertEquals(2, b);
+    }
+        @Test
+        void parExclusivoConTransferenciaRepetida() {
+            AirMiles am = new AirMiles();
+            am.registrarUsuario(1);
+                am.registrarUsuario(2);
+            am.acumularMillas(1, 1000, "NoPromo");
+            am.transferirMillas(1, 2, 670);
+            am.transferirMillas(1, 2, 67);   // repetida
+            int[][] pares = am.paresTransferidoresExclusivos();
+            assertEquals(1, pares.length);   // confirma q sigue siendo exclusivo 
+    }
+
 }
