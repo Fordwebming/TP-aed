@@ -700,4 +700,98 @@ public class AirMilesTests {
             assertEquals(1, pares.length);   // confirma q sigue siendo exclusivo 
     }
 
+
+    @Test
+    void unUsuarioRecibeDeDosPersonasDistintas() {
+        am.registrarUsuario(1);
+        am.registrarUsuario(2);
+        am.registrarUsuario(3);
+
+        am.acumularMillas(1, 500, "NoPromo");
+        am.acumularMillas(2, 500, "NoPromo");
+
+        am.transferirMillas(1, 3, 100);
+        am.transferirMillas(2, 3, 100);
+
+        assertEquals(0, am.paresTransferidoresExclusivos().length);//confirma que se rompio la exclusividad
+    }
+
+    @Test
+    void rankingParcialYDespuesActualizacionDeSaldos() {
+        am.registrarUsuario(1);
+        am.registrarUsuario(2);
+        am.registrarUsuario(3);
+
+        am.acumularMillas(1, 100, "NoPromo");
+        am.acumularMillas(2, 300, "NoPromo");
+        am.acumularMillas(3, 200, "NoPromo");
+
+        assertArrayEquals(new int[]{2}, am.rankingMillas(1));
+
+        // El usuario 3 supera al usuario 2.
+        am.acumularMillas(3, 200, "NoPromo");
+
+        assertArrayEquals(new int[]{3, 2, 1}, am.rankingMillas(3));
+    }
+
+    @Test
+    void elMasAcumuladorNoEsElDeMayorSaldoDisponible() {
+        am.registrarUsuario(1);
+        am.registrarUsuario(2);
+
+        am.acumularMillas(1, 1000, "NoPromo");
+        am.acumularMillas(2, 500, "NoPromo");
+
+        // El usuario 1 transfiere 800 al usuario 2.
+        am.transferirMillas(1, 2, 800);
+
+        assertEquals(200.0, am.consultarSaldo(1));
+        assertEquals(1300.0, am.consultarSaldo(2));
+
+        // El usuario 1 sigue siendo quien más millas acumuló históricamente.
+        assertEquals(1, am.elMasAcumulador());
+    }
+
+    @Test
+    void rankingSeReordenaCuandoUnUsuarioRecibeYDespuesCanjea() {
+        AirMiles am = new AirMiles();
+
+        am.registrarUsuario(1);
+        am.registrarUsuario(2);
+        am.registrarUsuario(3);
+
+        am.acumularMillas(1, 900, "NoPromo");
+        am.acumularMillas(2, 500, "NoPromo");
+        am.acumularMillas(3, 100, "NoPromo");
+
+        // Saldos: 1=200, 2=500, 3=800
+        am.transferirMillas(1, 3, 700);
+
+        assertArrayEquals(new int[]{3, 2, 1}, am.rankingMillas(3));
+
+        // El usuario 3 canjea y pasa de 800 a 50.
+        am.canjearMillas(3, 750);
+
+        // Saldos: 1=200, 2=500, 3=50
+        assertArrayEquals(new int[]{2, 1, 3}, am.rankingMillas(3));
+    }
+
+    @Test
+    void bonoDeReferidorActualizaElMasAcumulador() {
+        AirMiles am = new AirMiles();
+
+        am.registrarUsuario(1);
+        am.registrarUsuario(2);
+
+        am.acumularMillas(1, 600, "NoPromo");
+        am.acumularMillas(2, 800, "NoPromo");
+
+        assertEquals(2, am.elMasAcumulador());
+
+        // El usuario 1 recibe 500 millas por referir al usuario 3.
+        am.registrarUsuarioConReferidor(3, 1);
+
+        // Totales: usuario 1 = 1100, usuario 2 = 800, usuario 3 = 500.
+        assertEquals(1, am.elMasAcumulador());
+    }
 }
