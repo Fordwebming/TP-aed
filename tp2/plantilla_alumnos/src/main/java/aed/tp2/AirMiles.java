@@ -35,7 +35,7 @@ public class AirMiles implements SistemaAirMiles {
     }
 
     public void registrarUsuarioConReferidor(int id, int ref) {
-
+        Usuario referidor = buscarUsuarioPorID(ref);
         Usuario u = new Usuario(id);
         u.millas_disponibles += 500;
         u.millas_totales += 500;  
