@@ -24,10 +24,7 @@ public class AirMiles implements SistemaAirMiles {
     }
 
     public void registrarUsuario(int id) {
-        if (buscarUsuarioPorID(id) != null){
-            throw new UnsupportedOperationException ("el usuario ya pertenece al sistema");
-        }
-        
+
         Usuario u = new Usuario(id);  
         usuarios.insertar(u);
         HandleHeap<Usuario> handle =new HandleHeap<Usuario>(u);//agrego estas 3 lineas para registrando en el heap
@@ -38,15 +35,7 @@ public class AirMiles implements SistemaAirMiles {
     }
 
     public void registrarUsuarioConReferidor(int id, int ref) {
-        if (buscarUsuarioPorID(id) != null){
-            throw new UnsupportedOperationException ("el usuario ya pertenece al sistema");
-        }
-        
-        Usuario referidor = buscarUsuarioPorID(ref); 
-        if (referidor == null){
-            throw new UnsupportedOperationException ("el referidor no pertenece al sistema");
-        }
-        
+
         Usuario u = new Usuario(id);
         u.millas_disponibles += 500;
         u.millas_totales += 500;  
