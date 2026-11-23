@@ -1,11 +1,11 @@
 package aed.tp2;
 
-public class HandleHeap<T> implements Handle<T> {
+public class HandleImpl<T> implements Handle<T> {
     private T valorReferencia;
     private int indice;
     private HeapMax<T> heap;
 
-    public HandleHeap(T valor) {
+    public HandleImpl(T valor) {
         valorReferencia=valor;
         heap = null;
         indice = -1;

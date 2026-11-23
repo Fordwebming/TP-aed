@@ -6,21 +6,21 @@ import java.util.Comparator;
 public class HeapMax<T>{
     
     private int cantidad; //el arbol tiene que esta completo, tipo equilibrado, por eso hay que saber la prox posic disp
-    private ArrayList<HandleHeap<T>> elementos;
+    private ArrayList<HandleImpl<T>> elementos;
     private Comparator<T> comparador;
 
 
     public HeapMax(Comparator<T> critComparacion) {
-        elementos =new ArrayList<HandleHeap<T>>();
+        elementos =new ArrayList<HandleImpl<T>>();
         cantidad = 0;
         comparador = critComparacion;
     }
 
-    private int comparar(HandleHeap<T> h1, HandleHeap<T> h2) {
+    private int comparar(HandleImpl<T> h1, HandleImpl<T> h2) {
         return comparador.compare(h1.valor(), h2.valor());
     }
 
-    public void insertar(HandleHeap<T> handle) {
+    public void insertar(HandleImpl<T> handle) {
         elementos.add(handle);
         cantidad+=1;
         handle.asignarIndice(cantidad-1);
@@ -40,7 +40,7 @@ public class HeapMax<T>{
     }
 
     private void intercambiar(int posicHijo, int posicPadre) {
-        HandleHeap<T>  antiguoHijo = elementos.get(posicHijo);
+        HandleImpl<T>  antiguoHijo = elementos.get(posicHijo);
         elementos.set(posicHijo, elementos.get(posicPadre));//bajo al antiguo padre a la pasicion del hijo
         elementos.set(posicPadre,antiguoHijo);//subo al hijo a la posicion del padre
         elementos.get(posicHijo).asignarIndice(posicHijo);//le cambio los indices a los intercambiados
@@ -65,7 +65,7 @@ public class HeapMax<T>{
         }
     }
 
-    public void actualizar(HandleHeap<T> handle) {
+    public void actualizar(HandleImpl<T> handle) {
         int indice =handle.obtenerIndice();
         siftUp(indice);
         siftDown(handle.obtenerIndice());
@@ -76,13 +76,13 @@ public class HeapMax<T>{
             return;
         }
         intercambiar(indice, cantidad-1);
-        HandleHeap<T> eliminado = elementos.remove(cantidad-1);
+        HandleImpl<T> eliminado = elementos.remove(cantidad-1);
         cantidad-=1;
         eliminado.asignarHeap(null);
         eliminado.asignarIndice(-1);
         
         if (indice < cantidad) {
-            HandleHeap<T> elementoMovido = elementos.get(indice);
+            HandleImpl<T> elementoMovido = elementos.get(indice);
             siftUp(indice);
             siftDown(elementoMovido.obtenerIndice());
             //esto porque el ultimo elemento cambio deposicion y tengo que verificar o retomar el equilibrio
@@ -91,7 +91,7 @@ public class HeapMax<T>{
     public int cantDeElems() {
         return cantidad;
     }
-    public ArrayList<HandleHeap<T>> arrayDeRanking() {
+    public ArrayList<HandleImpl<T>> arrayDeRanking() {
         return elementos;//creo que no lo uso
     }
 

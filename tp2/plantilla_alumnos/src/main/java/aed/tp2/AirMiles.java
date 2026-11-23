@@ -27,7 +27,7 @@ public class AirMiles implements SistemaAirMiles {
 
         Usuario u = new Usuario(id);  
         usuarios.insertar(u);
-        HandleHeap<Usuario> handle =new HandleHeap<Usuario>(u);//agrego estas 3 lineas para registrando en el heap
+        HandleImpl<Usuario> handle =new HandleImpl<Usuario>(u);//agrego estas 3 lineas para registrando en el heap
         handle.asignarHeap(ranking);
         ranking.insertar(handle);
         u.handleRanking=handle;
@@ -45,7 +45,7 @@ public class AirMiles implements SistemaAirMiles {
         // como las constantes no cuentan para la complejidad puedo recorrer el arbol 3 veces sin romper la consigna
         //agrego las mismas lineas que en registrar usuario
         ranking.actualizar(referidor.handleRanking);
-        HandleHeap<Usuario> handle =new HandleHeap<Usuario>(u);
+        HandleImpl<Usuario> handle =new HandleImpl<Usuario>(u);
         handle.asignarHeap(ranking);
         ranking.insertar(handle);
         u.handleRanking=handle;
@@ -156,16 +156,16 @@ public class AirMiles implements SistemaAirMiles {
         } else {
             res = new int[n];
         }
-        ArrayList<HandleHeap<Usuario>> guardadoTemporal = new ArrayList<>();
+        ArrayList<HandleImpl<Usuario>> guardadoTemporal = new ArrayList<>();
         for (int i=0; i<res.length; i+=1) {
             Usuario usuarioRanking = ranking.devolverMaximo();
             res[i] = usuarioRanking.identificador;
-            HandleHeap<Usuario> handleDeUsuario = usuarioRanking.handleRanking;
+            HandleImpl<Usuario> handleDeUsuario = usuarioRanking.handleRanking;
             ranking.eliminarEn(0);//siempre elimino el primero para que avance al siguiente del rank
             guardadoTemporal.add(handleDeUsuario);
         }//voy sacando los handle del haep para luego volver a insertar en log n
         for (int i = 0; i < res.length; i+=1) {//vuelo a insertar los handle que saque en log n
-            HandleHeap<Usuario> recuperoHandle = guardadoTemporal.get(i);
+            HandleImpl<Usuario> recuperoHandle = guardadoTemporal.get(i);
             recuperoHandle.asignarHeap(ranking);
             ranking.insertar(recuperoHandle);
         }
@@ -198,7 +198,7 @@ public class AirMiles implements SistemaAirMiles {
     public int[][] paresTransferidoresExclusivos() {
         
         int[][] res;
-        ArrayList<HandleHeap<Usuario>> arrayDeHandles =ranking.arrayDeRanking();
+        ArrayList<HandleImpl<Usuario>> arrayDeHandles =ranking.arrayDeRanking();
         Usuario[] arregloDeUsuarios = new Usuario[ranking.cantDeElems()];//me creo esta para poder acceder a todos los usuarios en O(U)
         
         //es este for obtengo los usuarios
