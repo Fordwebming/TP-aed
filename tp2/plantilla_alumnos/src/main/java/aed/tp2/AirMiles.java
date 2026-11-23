@@ -5,10 +5,10 @@ public class AirMiles implements SistemaAirMiles {
     private ABB<Usuario> usuarios;
     private Trie<Promo> promociones;
     private HeapMax<Usuario> ranking;
-    private double maxMillasGastadas;
-    private int  idMayorCanjeador;
-    private double maxMillasTotales;
-    private int idMasMillasTotales;
+    
+    //aca voy probando para cumplir la correccion
+    private Usuario mayorCanjeador;
+    private Usuario mayorAcumulador;
 
     public AirMiles() {
         this.usuarios = new ABB<>();
@@ -17,10 +17,10 @@ public class AirMiles implements SistemaAirMiles {
         this.promociones.insertar("NoPromo", predeterminada);
         ComparadorUsuarios comparador = new ComparadorUsuarios();
         ranking = new HeapMax<>(comparador);
-        this.maxMillasGastadas = 0;
-        this.idMayorCanjeador = -1;
-        this.idMasMillasTotales=-1;
-        this.maxMillasTotales=-1;//para indicar que todavia no hay ninguno registrado
+        
+        //agrago para cumplir la correccion, luego borro las 4 lineas de arriba
+        this.mayorAcumulador=null;
+        this.mayorCanjeador = null;
     }
 
     public void registrarUsuario(int id) {
@@ -31,7 +31,7 @@ public class AirMiles implements SistemaAirMiles {
         handle.asignarHeap(ranking);
         ranking.insertar(handle);
         u.handleRanking=handle;
-        actualizarMaxMillasTotales(u);
+        actualizarMayorAcumulador(u);
     }
 
     public void registrarUsuarioConReferidor(int id, int ref) {
@@ -50,8 +50,8 @@ public class AirMiles implements SistemaAirMiles {
         ranking.insertar(handle);
         u.handleRanking=handle;
 
-        actualizarMaxMillasTotales(u);
-        actualizarMaxMillasTotales(referidor);
+        actualizarMayorAcumulador(u);
+        actualizarMayorAcumulador(referidor);
 
     }
 
@@ -74,7 +74,7 @@ public class AirMiles implements SistemaAirMiles {
             }
         }
         ranking.actualizar(u.handleRanking);
-        actualizarMaxMillasTotales(u);
+        actualizarMayorAcumulador(u);
     }
 
     public void canjearMillas(int id, double cantidad) {
@@ -85,10 +85,7 @@ public class AirMiles implements SistemaAirMiles {
         usuario.millas_disponibles -= cantidad;
         usuario.millas_gastadas += cantidad;
 
-        if (usuario.millas_gastadas > maxMillasGastadas) {//me sirve para modificar los punteros q usa el mas canjeador
-            maxMillasGastadas = usuario.millas_gastadas;
-            idMayorCanjeador = usuario.identificador;
-        }
+        actualizarMayorCanjeador(usuario);
         ranking.actualizar(usuario.handleRanking);
     }
 
@@ -104,11 +101,8 @@ public class AirMiles implements SistemaAirMiles {
 
         destinoID.millas_disponibles += cantidad;//tengo entendido que solo se modifican las disponibles
         
-        if (origenID.millas_gastadas > maxMillasGastadas){//me actualiza los punteros del mas canjeador 
-            maxMillasGastadas = origenID.millas_gastadas;
-            idMayorCanjeador = origenID.identificador;
+        actualizarMayorCanjeador(origenID);
 
-        }
         ranking.actualizar(origenID.handleRanking);//en estas dos lineas actualizo el heap ya que para uno aumenta y para el otro disminuye
         ranking.actualizar(destinoID.handleRanking);
 
@@ -188,11 +182,11 @@ public class AirMiles implements SistemaAirMiles {
     }
 
     public int elMasAcumulador() {
-        return idMasMillasTotales;
+        return mayorAcumulador.identificador;
     }
 
     public int elMasCanjeador() {
-        return idMayorCanjeador;
+        return mayorCanjeador.identificador;
     }
 
     public int[][] paresTransferidoresExclusivos() {
@@ -311,13 +305,21 @@ public class AirMiles implements SistemaAirMiles {
         }
     }
 
-    private void actualizarMaxMillasTotales(Usuario u) {
-        if (u.millas_totales > maxMillasTotales) {
-            maxMillasTotales = u.millas_totales;
-            idMasMillasTotales = u.identificador;
+    private void actualizarMayorAcumulador(Usuario u) {
+        if (mayorAcumulador==null) {
+            mayorAcumulador=u;
+        } else if (u.millas_totales > mayorAcumulador.millas_totales) {
+            mayorAcumulador = u;
         }
     }
 
+    private void actualizarMayorCanjeador(Usuario u) {
+        if (mayorCanjeador==null) {
+            mayorCanjeador=u;
+        } else if (u.millas_gastadas > mayorCanjeador.millas_gastadas) {
+            mayorCanjeador = u;
+        }
+    }
     
 }
 
