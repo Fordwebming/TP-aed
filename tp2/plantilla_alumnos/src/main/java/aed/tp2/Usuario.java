@@ -28,9 +28,9 @@ public class Usuario implements Comparable<Usuario> {
         unicoUsuarioAlQTransfiere = -1;
         esTransferidorExclusivo = false;
     }
-    
+    @Override 
     public int compareTo(Usuario otro){
-        return Integer.compare(this.identificador, otro.identificador);
+        return Double.compare(this.millas_disponibles, otro.millas_disponibles);
     }
 
     public Usuario obtenerUsuarioExclusivo() {

@@ -15,10 +15,10 @@ public class AirMiles implements SistemaAirMiles {
         this.promociones = new Trie<Promo>();
         Promo predeterminada = new Promo(1.0);
         this.promociones.insertar("NoPromo", predeterminada);
-        ComparadorUsuarios comparador = new ComparadorUsuarios();
-        ranking = new HeapMax<>(comparador);
         
-        //agrago para cumplir la correccion, luego borro las 4 lineas de arriba
+        ranking = new HeapMax<>();
+        
+        //agrago para cumplir la correccion
         this.mayorAcumulador=null;
         this.mayorCanjeador = null;
     }

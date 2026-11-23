@@ -1,23 +1,21 @@
 package aed.tp2;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 
-public class HeapMax<T>{
+
+public class HeapMax<T extends Comparable<T>>{
     
     private int cantidad; //el arbol tiene que esta completo, tipo equilibrado, por eso hay que saber la prox posic disp
     private ArrayList<HandleImpl<T>> elementos;
-    private Comparator<T> comparador;
 
 
-    public HeapMax(Comparator<T> critComparacion) {
+    public HeapMax() {
         elementos =new ArrayList<HandleImpl<T>>();
         cantidad = 0;
-        comparador = critComparacion;
     }
 
     private int comparar(HandleImpl<T> h1, HandleImpl<T> h2) {
-        return comparador.compare(h1.valor(), h2.valor());
+        return h1.valor().compareTo(h2.valor());
     }
 
     public void insertar(HandleImpl<T> handle) {
