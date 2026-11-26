@@ -8,7 +8,7 @@ public class ABB<T extends Comparable<T>, V>{
     public class Nodo {
         // Agregar atributos privados del Nodo
         public T clave;
-        public V usuario; //si bien el atributo se llama usuario sigue siendo de tipo generico
+        public V valor; //si bien el atributo se llama usuario sigue siendo de tipo generico
         public Nodo izquierda;
         public Nodo padre;
         public Nodo derecha;
