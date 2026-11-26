@@ -1,11 +1,11 @@
 package aed.tp2;
 
-public class HandleImpl<T extends Comparable<T>> implements Handle<T> {
+public class HandleUsuario<T extends Comparable<T>> implements Handle<T> {
     private T valorReferencia;
     private int indice;
     private HeapMax<T> heap;
 
-    public HandleImpl(T valor) {
+    public HandleUsuario(T valor) {
         valorReferencia=valor;
         heap = null;
         indice = -1;

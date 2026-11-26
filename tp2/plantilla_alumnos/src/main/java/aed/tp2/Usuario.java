@@ -5,7 +5,7 @@ public class Usuario implements Comparable<Usuario> {
     public double millas_totales;
     public double millas_disponibles;
     public double millas_gastadas;
-    public HandleImpl<Usuario> handleRanking;
+    public HandleUsuario<Usuario> handleRanking;
     public boolean recibioExclusivamente;
     public boolean transfirioExclusivamente;
     public int unicoUsuarioDelQRecibe;
