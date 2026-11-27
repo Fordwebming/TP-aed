@@ -1,10 +1,10 @@
 package aed.tp2;
 
 public class Usuario implements Comparable<Usuario> {
-    public int identificador;  //los atributos son publicos para poder usarlos en la clase nodo del ABB de usuarios
-    public double millas_totales;
-    public double millas_disponibles;
-    public double millas_gastadas;
+    private  int identificador;  //los atributos son publicos para poder usarlos en la clase nodo del ABB de usuarios
+    private double millas_totales;
+    private  double millas_disponibles;
+    private double millas_gastadas;
     public HandleUsuario<Usuario> handleRanking;
     public boolean recibioExclusivamente;
     public boolean transfirioExclusivamente;
@@ -57,11 +57,27 @@ public class Usuario implements Comparable<Usuario> {
         return identificador;
     }
 
+    public void aumentarTotales(double x) {
+        this.millas_totales += x;
+    }
+
+    public void aumentarDisponibles(double x) {
+        this.millas_disponibles += x;
+    }
+
+    public void aumentarGastadas(double x) {
+        this.millas_gastadas += x;
+    }
+
+    public void disminuirDisponibles(double x) {
+        this.millas_disponibles -= x;
+    }
+
     public boolean esExclusivo() {
         return esTransferidorExclusivo;
     }
 
-    public void asignarHanlde(HandleUsuario<Usuario> h) {
+    public void asignarHandle(HandleUsuario<Usuario> h) {
         this.handleRanking = h;
     }
 

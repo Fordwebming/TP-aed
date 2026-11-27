@@ -603,7 +603,7 @@ public class AirMilesTests {
         am1.acumularMillas(100, 100000000, "NoPromo");
         am1.canjearMillas(100, 100000000);
         assertEquals("Platino", am1.consultarCategoria(100));
-        assertEquals(100000500, am1.buscarUsuarioPorID(100).millas_totales);
+        assertEquals(100000500, am1.buscarUsuarioPorID(100).obtenerMillasTotales());
     }
     @Test
     void promoSinTopePrefijoDePromoConTope(){

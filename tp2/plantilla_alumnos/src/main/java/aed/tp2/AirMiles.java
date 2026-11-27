@@ -33,7 +33,7 @@ public class AirMiles implements SistemaAirMiles {
         HandleUsuario<Usuario> handle =new HandleUsuario<Usuario>(u);//agrego estas 3 lineas para registrando en el heap
         handle.asignarHeap(ranking);
         ranking.insertar(handle);
-        u.handleRanking=handle;
+        u.asignarHandle(handle);
         actualizarMayorAcumulador(u);
     }
 
@@ -49,18 +49,18 @@ public class AirMiles implements SistemaAirMiles {
             throw new IllegalArgumentException("NO existe el Referidor ");
         }
         Usuario u = new Usuario(id);
-        u.millas_disponibles += 500;
-        u.millas_totales += 500;  
+        u.aumentarDisponibles(500);
+        u.aumentarTotales(500);
         usuarios.insertar(u);
-        referidor.millas_disponibles += 500;
-        referidor.millas_totales += 500;
+        referidor.aumentarDisponibles(500);
+        referidor.aumentarTotales(500);
         // como las constantes no cuentan para la complejidad puedo recorrer el arbol 3 veces sin romper la consigna
         //agrego las mismas lineas que en registrar usuario
         ranking.actualizar(referidor.handleRanking);
         HandleUsuario<Usuario> handle =new HandleUsuario<Usuario>(u);
         handle.asignarHeap(ranking);
         ranking.insertar(handle);
-        u.handleRanking=handle;
+        u.asignarHandle(handle);
 
         actualizarMayorAcumulador(u);
         actualizarMayorAcumulador(referidor);
@@ -85,8 +85,8 @@ public class AirMiles implements SistemaAirMiles {
 
         double millasGanadas = distancia*factorCatU*factorPromocion;
 
-        u.millas_totales += millasGanadas;
-        u.millas_disponibles += millasGanadas;
+        u.aumentarTotales(millasGanadas);
+        u.aumentarDisponibles(millasGanadas);
 
         if (p != null && p.tope != 0){   // => esPromoConTope
             p.acumulacionMillas += millasGanadas;
@@ -106,11 +106,11 @@ public class AirMiles implements SistemaAirMiles {
         if (usuario == null) {
             throw new IllegalArgumentException("Usuario no existe");
         }
-        if (usuario.millas_disponibles < cantidad) {
+        if (usuario.obtenerMillasDisponibles() < cantidad) {
             return;
         }
-        usuario.millas_disponibles -= cantidad;
-        usuario.millas_gastadas += cantidad;
+        usuario.disminuirDisponibles(cantidad);
+        usuario.aumentarGastadas(cantidad);
 
         actualizarMayorCanjeador(usuario);
         ranking.actualizar(usuario.handleRanking);
@@ -132,33 +132,23 @@ public class AirMiles implements SistemaAirMiles {
             throw new IllegalArgumentException("Usuario destino inexistente");
         }
 
-        if (origenID.millas_disponibles < cantidad){
+        if (origenID.obtenerMillasDisponibles() < cantidad){
             return;
         }
-        origenID.millas_disponibles -= cantidad;
-        origenID.millas_gastadas += cantidad;
+        origenID.disminuirDisponibles(cantidad);
+        origenID.aumentarGastadas(cantidad);
 
-        destinoID.millas_disponibles += cantidad;//tengo entendido que solo se modifican las disponibles
+        destinoID.aumentarDisponibles(cantidad);//tengo entendido que solo se modifican las disponibles
         
         actualizarMayorCanjeador(origenID);
 
         ranking.actualizar(origenID.handleRanking);//en estas dos lineas actualizo el heap ya que para uno aumenta y para el otro disminuye
         ranking.actualizar(destinoID.handleRanking);
 
-        if (origenID.unicoUsuarioAlQTransfiere < 0) {//registro si los usuarios siempre transfieren a uno solo
-            origenID.unicoUsuarioAlQTransfiere = destino;
-        } else if (origenID.unicoUsuarioAlQTransfiere != destino) {
-            origenID.transfirioExclusivamente = false;
-        }
-
-        if (destinoID.unicoUsuarioDelQRecibe < 0) {//registro si un usuario recibe siempre del mismo
-            destinoID.unicoUsuarioDelQRecibe = origen;
-        } else if (destinoID.unicoUsuarioDelQRecibe != origen) {
-            destinoID.recibioExclusivamente = false;
-        }
+        origenID.registrarTransferenciaConUsuario(destinoID);
         
-        actualizarExclusividad(origenID);
-        actualizarExclusividad(destinoID);
+        origenID.actualizarExclusividad(destinoID);
+        destinoID.actualizarExclusividad(origenID);
         
     }
 
@@ -167,7 +157,7 @@ public class AirMiles implements SistemaAirMiles {
         if (u == null) {
             throw new IllegalArgumentException("Usuario inexistente");
         }
-        return u.millas_disponibles;
+        return u.obtenerMillasDisponibles();
     }
 
     public String consultarCategoria(int id) {
@@ -175,7 +165,7 @@ public class AirMiles implements SistemaAirMiles {
         if (u == null) {
             throw new IllegalArgumentException("Usuario inexistente" );
         }
-        double totales = u.millas_totales;
+        double totales = u.obtenerMillasTotales();
         String res = "Platino";
         if (totales < 10000){
             res = "Bronce";
@@ -201,7 +191,7 @@ public class AirMiles implements SistemaAirMiles {
         ArrayList<HandleUsuario<Usuario>> guardadoTemporal = new ArrayList<>();
         for (int i=0; i<res.length; i+=1) {
             Usuario usuarioRanking = ranking.devolverMaximo();
-            res[i] = usuarioRanking.identificador;
+            res[i] = usuarioRanking.obtenerIdentificador();
             HandleUsuario<Usuario> handleDeUsuario = usuarioRanking.handleRanking;
             ranking.eliminarEn(0);//siempre elimino el primero para que avance al siguiente del rank
             guardadoTemporal.add(handleDeUsuario);
@@ -260,14 +250,14 @@ public class AirMiles implements SistemaAirMiles {
         if (mayorAcumulador == null) {
             throw new IllegalStateException("No hay usuarios registrados en el sistema");
         }
-        return mayorAcumulador.identificador;
+        return mayorAcumulador.obtenerIdentificador();
     }
 
     public int elMasCanjeador() {
         if (mayorCanjeador == null) {
             throw new IllegalStateException("No hay usuarios con canjes/transferencias registradas");
         }
-        return mayorCanjeador.identificador;
+        return mayorCanjeador.obtenerIdentificador();
     }
 
     public int[][] paresTransferidoresExclusivos() {
@@ -289,8 +279,8 @@ public class AirMiles implements SistemaAirMiles {
             if (usuario.esTransferidorExclusivo) {
                 Usuario otro = usuario.obtenerUsuarioExclusivo();
                 if(otro != null && otro.esTransferidorExclusivo &&
-                    otro.obtenerUsuarioExclusivo().identificador == usuario.identificador &&
-                    usuario.identificador< otro.identificador) {//para no agregar dos veces el mismo par
+                    otro.obtenerUsuarioExclusivo().obtenerIdentificador() == usuario.obtenerIdentificador() &&
+                    usuario.obtenerIdentificador()< otro.obtenerIdentificador()) {//para no agregar dos veces el mismo par
                         cantDePares +=1;
                     }
             }
@@ -304,10 +294,10 @@ public class AirMiles implements SistemaAirMiles {
             if (usuario.esTransferidorExclusivo) {
                 Usuario otro =usuario.obtenerUsuarioExclusivo();
                 if (otro != null && otro.esTransferidorExclusivo &&
-                    otro.obtenerUsuarioExclusivo().identificador == usuario.identificador &&
-                    usuario.identificador < otro.identificador) {
-                    res[indice][0]= usuario.identificador;
-                    res[indice][1]= otro.identificador;
+                    otro.obtenerUsuarioExclusivo().obtenerIdentificador() == usuario.obtenerIdentificador() &&
+                    usuario.obtenerIdentificador() < otro.obtenerIdentificador()) {
+                    res[indice][0]= usuario.obtenerIdentificador();
+                    res[indice][1]= otro.obtenerIdentificador();
 
                     indice+=1;
                 }
@@ -320,8 +310,8 @@ public class AirMiles implements SistemaAirMiles {
     //metodos auxiliares
     public Usuario buscarUsuarioPorID(int u){
         ABB<Usuario>.Nodo raiz_actual = usuarios.raiz;
-        while (raiz_actual != null && raiz_actual.usuario.identificador != u ){
-            if (raiz_actual.usuario.identificador < u){ //busco a la derecha
+        while (raiz_actual != null && raiz_actual.usuario.obtenerIdentificador() != u ){
+            if (raiz_actual.usuario.obtenerIdentificador() < u){ //busco a la derecha
                 raiz_actual = raiz_actual.derecha;
             }
             else{
@@ -389,7 +379,7 @@ public class AirMiles implements SistemaAirMiles {
     private void actualizarMayorAcumulador(Usuario u) {
         if (mayorAcumulador==null) {
             mayorAcumulador=u;
-        } else if (u.millas_totales > mayorAcumulador.millas_totales) {
+        } else if (u.obtenerMillasTotales() > mayorAcumulador.obtenerMillasTotales()) {
             mayorAcumulador = u;
         }
     }
@@ -397,7 +387,7 @@ public class AirMiles implements SistemaAirMiles {
     private void actualizarMayorCanjeador(Usuario u) {
         if (mayorCanjeador==null) {
             mayorCanjeador=u;
-        } else if (u.millas_gastadas > mayorCanjeador.millas_gastadas) {
+        } else if (u.obtenerMillasGastadas() > mayorCanjeador.obtenerMillasGastadas()) {
             mayorCanjeador = u;
         }
     }
