@@ -1,21 +1,22 @@
 package aed.tp2;
 
-public class ABB<T extends Comparable<T>>{
+public class ABB<T extends Comparable<T>, V>{
     public Nodo raiz;
     public int cardinal;
     
 
     public class Nodo {
         // Agregar atributos privados del Nodo
-        public T usuario; //si bien el atributo se llama usuario sigue siendo de tipo generico
+        public T clave;
+        public V valor; //si bien el atributo se llama usuario sigue siendo de tipo generico
         public Nodo izquierda;
         public Nodo padre;
         public Nodo derecha;
 
         // Crear Constructor del nodo
-        public Nodo(T u) {
-            usuario = u;
-            //id = u.identificador;
+        public Nodo(T c,V u) {
+            valor = u;
+            clave = c;
             izquierda = null;
             derecha = null;
             padre = null;
@@ -28,9 +29,9 @@ public class ABB<T extends Comparable<T>>{
         cardinal = 0;
     }
 
-    public void insertar(T usuario){
+    public void insertar(T clave , V valor){
         boolean insertar = false;
-        Nodo nuevo = new Nodo(usuario);
+        Nodo nuevo = new Nodo(clave,valor);
         Nodo raiz_actual = this.raiz;
         if (raiz_actual == null){
             this.raiz = nuevo;
@@ -38,7 +39,7 @@ public class ABB<T extends Comparable<T>>{
          }
         else{
             while (raiz_actual != null && insertar == false){
-                if (nuevo.usuario.compareTo(raiz_actual.usuario) > 0){
+                if (nuevo.clave.compareTo(raiz_actual.clave) > 0){
                     if (raiz_actual.derecha == null){ //si no hay nada mas a la derecha 
                         raiz_actual.derecha = nuevo;
                         nuevo.padre = raiz_actual;
@@ -49,7 +50,7 @@ public class ABB<T extends Comparable<T>>{
                     else{
                         raiz_actual = raiz_actual.derecha; //recorro hacia la derecha
                     }
-                }else if (nuevo.usuario.compareTo(raiz_actual.usuario) < 0) {
+                }else if (nuevo.clave.compareTo(raiz_actual.clave) < 0) {
                     if (raiz_actual.izquierda == null){ //si no hay nada mas a la izquierda 
                         raiz_actual.izquierda = nuevo;
                         nuevo.padre = raiz_actual;
@@ -71,12 +72,6 @@ public class ABB<T extends Comparable<T>>{
         return this.cardinal;
     }
 
-    public T minimo(){
-        Nodo raiz_actual = this.raiz;
-        while (raiz_actual.izquierda != null){
-            raiz_actual = raiz_actual.izquierda;
-        }
-        return raiz_actual.usuario;
-    }
+    
 
 }
