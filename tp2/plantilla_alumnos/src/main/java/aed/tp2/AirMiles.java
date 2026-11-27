@@ -24,6 +24,9 @@ public class AirMiles implements SistemaAirMiles {
     }
 
     public void registrarUsuario(int id) {
+        if (buscarUsuarioPorID(id) != null) {
+            throw new IllegalArgumentException("Usuario ya registrado");
+        }
 
         Usuario u = new Usuario(id);  
         usuarios.insertar(u);
@@ -35,7 +38,16 @@ public class AirMiles implements SistemaAirMiles {
     }
 
     public void registrarUsuarioConReferidor(int id, int ref) {
+        if (buscarUsuarioPorID(id) != null) {
+            throw new IllegalArgumentException("Usuario ya registrado");
+        }
+        if (id == ref) {
+            throw new IllegalArgumentException("Un usuario no puede ser su propio referidor");
+        }
         Usuario referidor = buscarUsuarioPorID(ref);
+        if (referidor == null) {
+            throw new IllegalArgumentException("NO existe el Referidor ");
+        }
         Usuario u = new Usuario(id);
         u.millas_disponibles += 500;
         u.millas_totales += 500;  
@@ -56,7 +68,16 @@ public class AirMiles implements SistemaAirMiles {
     }
 
     public void acumularMillas(int id, double distancia, String nombrePromo) {
+        if (distancia < 0) {
+            throw new IllegalArgumentException("La distancia no puede ser negativa");
+        }
+        if (nombrePromo == null) {
+            throw new IllegalArgumentException("La promocion debe existir");
+        }
         Usuario u = buscarUsuarioPorID(id);
+        if (u == null) {
+            throw new IllegalArgumentException("Usuario no existe");
+        }
         Promo p = promociones.obtenerValor(nombrePromo);
         double factorPromocion = factorPromo(nombrePromo);
         String categoriaU = consultarCategoria(id);
@@ -78,7 +99,13 @@ public class AirMiles implements SistemaAirMiles {
     }
 
     public void canjearMillas(int id, double cantidad) {
+        if (cantidad < 0) {
+            throw new IllegalArgumentException("La cantidad a canjear no puede ser negativa");
+        }
         Usuario usuario = buscarUsuarioPorID(id);
+        if (u == null) {
+            throw new IllegalArgumentException("Usuario no existe");
+        }
         if (usuario.millas_disponibles < cantidad) {
             return;
         }
@@ -90,8 +117,20 @@ public class AirMiles implements SistemaAirMiles {
     }
 
     public void transferirMillas(int origen, int destino, double cantidad) {
+        if (cantidad < 0) {
+            throw new IllegalArgumentException("La cantidad a transferir no puede ser negativa" );
+        }
+        if (origen == destino) {
+            throw new IllegalArgumentException("Origen y destino no pueden ser el mismo usuario");
+        }
         Usuario origenID = buscarUsuarioPorID (origen);
-        Usuario destinoID = buscarUsuarioPorID(destino);
+        if (origenID == null) {
+            throw new IllegalArgumentException("Usuario origen inexistente");
+        }
+        Usuario destinoID = buscarUsuarioPorID(destino);        
+        if (destinoID == null) {
+            throw new IllegalArgumentException("Usuario destino inexistente");
+        }
 
         if (origenID.millas_disponibles < cantidad){
             return;
@@ -125,11 +164,17 @@ public class AirMiles implements SistemaAirMiles {
 
     public double consultarSaldo(int id) {
         Usuario u = buscarUsuarioPorID(id);
+        if (u == null) {
+            throw new IllegalArgumentException("Usuario inexistente");
+        }
         return u.millas_disponibles;
     }
 
     public String consultarCategoria(int id) {
         Usuario u= buscarUsuarioPorID(id);
+        if (u == null) {
+            throw new IllegalArgumentException("Usuario inexistente" );
+        }
         double totales = u.millas_totales;
         String res = "Platino";
         if (totales < 10000){
@@ -143,6 +188,9 @@ public class AirMiles implements SistemaAirMiles {
     }
 
     public int[] rankingMillas(int n) {
+        if (n < 0) {
+            throw new IllegalArgumentException("El valor no puede ser negativo");
+        }
         int[] res;
         if(ranking.cantDeElems() < n) {
             res = new int[ranking.cantDeElems()];
@@ -166,26 +214,59 @@ public class AirMiles implements SistemaAirMiles {
 
         return res;
     }
+    
+    private void validarNombrePromo(String nombre) {
+    if (nombre == null || nombre.isEmpty()) {
+        throw new IllegalArgumentException("El nombre de la promoción no puede no existir ni estar vacío");
+    }}
+        // creo q aca deberia poenrse algo en el caso de q se le metan letras de otro alfabeto/idioma, creo es es tipo
+        //!nombre.matches masomenos, pero no se como funciona
 
     public void iniciarPromocion(String nombre, double factor) {
+        validarNombrePromo(nombre);
+        if ("NoPromo".equals(nombre)) {
+            throw new IllegalArgumentException("'NoPromo' es una promoción reservada del sistema");
+        }
+        if (factor < 0) {
+            throw new IllegalArgumentException("El factor no puede ser negativo");
+        }
         Promo nuevaPromo = new Promo(factor);
         promociones.insertar(nombre, nuevaPromo);
     }
 
     public void iniciarPromocionConTope(String nombre, double factor, double tope) {
+        validarNombrePromo(nombre);
+        if ("NoPromo".equals(nombre)) {
+            throw new IllegalArgumentException("'NoPromo' es una promoción reservada del sistema");
+        }
+        if (factor < 0) {
+            throw new IllegalArgumentException("El factor no puede ser negativo");
+        }
+        if (tope <= 0) {
+            throw new IllegalArgumentException("El tope debe ser positivo");
+        }
         Promo nuevaPromo = new Promo(factor, tope);
         promociones.insertar(nombre, nuevaPromo);
     }
 
     public void finalizarPromocion(String nombre) {
+    if ("NoPromo".equals(nombre)) {
+        throw new IllegalArgumentException("No se puede finalizar la promoción predeterminada 'NoPromo'");}
+    
         promociones.eliminar(nombre); 
     }
 
     public int elMasAcumulador() {
+        if (mayorAcumulador == null) {
+            throw new IllegalStateException("No hay usuarios registrados en el sistema");
+        }
         return mayorAcumulador.identificador;
     }
 
     public int elMasCanjeador() {
+        if (mayorCanjeador == null) {
+            throw new IllegalStateException("No hay usuarios con canjes/transferencias registradas");
+        }
         return mayorCanjeador.identificador;
     }
 
