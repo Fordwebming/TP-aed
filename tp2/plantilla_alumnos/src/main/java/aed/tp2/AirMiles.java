@@ -308,14 +308,14 @@ public class AirMiles implements SistemaAirMiles {
     }
 
     //metodos auxiliares
-   public Usuario buscarUsuarioPorID(int u){
-        ABB<Integer,Usuario>.Nodo raiz_actual = usuarios.raiz;
-        while (raiz_actual != null && raiz_actual.valor.obtenerIdentificador() != u ){
-            if (raiz_actual.valor.obtenerIdentificador() < u){ //busco a la derecha
-                raiz_actual = raiz_actual.derecha;
+  public Usuario buscarUsuarioPorID(int u){
+        ABB<Integer,Usuario>.Nodo raiz_actual = usuarios.raiz();
+        while (raiz_actual != null && raiz_actual.clave() != u ){
+            if (raiz_actual.clave() < u){ //busco a la derecha
+                raiz_actual = raiz_actual.derecha();
             }
             else{
-                raiz_actual = raiz_actual.izquierda; //busco a la izquierda
+                raiz_actual = raiz_actual.izquierda(); //busco a la izquierda
             }
         }
         //si el usuario no existe devuelve null, asi que tambien sirve como un metodo para saber si pertenece un usuario
@@ -323,9 +323,10 @@ public class AirMiles implements SistemaAirMiles {
             return null;
         }
         else{
-            return raiz_actual.valor;
+            return raiz_actual.valor();
         }
     }
+
 
     public double factorCategoria(String categoria){
         double res = 0;   //Platino 
