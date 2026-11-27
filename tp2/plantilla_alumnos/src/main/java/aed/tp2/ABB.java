@@ -1,17 +1,17 @@
 package aed.tp2;
 
 public class ABB<T extends Comparable<T>, V>{
-    public Nodo raiz;
-    public int cardinal;
+    private Nodo raiz;
+    private int cardinal;
     
 
     public class Nodo {
         // Agregar atributos privados del Nodo
-        public T clave;
-        public V valor; //si bien el atributo se llama usuario sigue siendo de tipo generico
-        public Nodo izquierda;
-        public Nodo padre;
-        public Nodo derecha;
+        private T clave;
+        private V valor; //si bien el atributo se llama usuario sigue siendo de tipo generico
+        private Nodo izquierda;
+        private Nodo padre;
+        private Nodo derecha;
 
         // Crear Constructor del nodo
         public Nodo(T c,V u) {
@@ -21,12 +21,36 @@ public class ABB<T extends Comparable<T>, V>{
             derecha = null;
             padre = null;
         }
+
+        public T clave(){
+            return this.clave;
+        }
+        
+        public V valor(){
+            return this.valor;
+        }
+
+        public Nodo izquierda(){
+            return this.izquierda;
+        }
+
+        public Nodo derecha(){
+            return this.derecha;
+        }
+
+        public Nodo Padre(){
+            return this.padre;
+        }
         
     }
 
     public ABB() {
         raiz = null;
         cardinal = 0;
+    }
+
+    public Nodo raiz(){
+        return this.raiz;
     }
 
     public void insertar(T clave , V valor){
