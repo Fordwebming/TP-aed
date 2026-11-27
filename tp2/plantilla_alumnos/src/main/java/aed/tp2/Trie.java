@@ -11,7 +11,7 @@ public class Trie<T> {
 
         Nodo() {                     
             hijos = new ArrayList<Nodo>();
-            for (int i=0; i< 52; i++){       //52 es la cantidad de mins y mays
+            for (int i=0; i< 256; i++){       //256 es la cantidad de caracteres totales 
                 hijos.add(null);
             }
             valor = null;               
@@ -26,34 +26,20 @@ public class Trie<T> {
         Nodo actual = raiz; 
         for (int i=0; i<palabra.length(); i++){
             char caracter = palabra.charAt(i);
-            int indice = obtenerIndice(caracter);
 
-            if (actual.hijos.get(indice) == null){
-                actual.hijos.set(indice, new Nodo());
+            if (actual.hijos.get(caracter) == null){
+                actual.hijos.set(caracter, new Nodo());
             }
-            actual = actual.hijos.get(indice);
+            actual = actual.hijos.get(caracter);
         }
         actual.valor = elem;  
-    }
-
-    private int obtenerIndice(char caracter){
-        int res=0;
-        if(caracter >= 'A' && caracter <= 'Z'){
-            res = caracter - 'A';
-        } else {
-            if(caracter >= 'a' && caracter <= 'z'){
-                res = (caracter - 'a') + 26;
-            }
-        }
-        return res;
     }
 
     public Nodo obtenerNodo(String palabra){  
         Nodo actual = raiz;
         for (int i=0; i<palabra.length(); i++){
             char caracter = palabra.charAt(i); 
-            int indice = obtenerIndice(caracter);
-            actual = actual.hijos.get(indice);   
+            actual = actual.hijos.get(caracter);   
             if (actual == null){
                 return null;
             }
@@ -83,9 +69,8 @@ public class Trie<T> {
     private boolean eliminarRecursivamente(Nodo actual, String palabra, int i){
         if (i < palabra.length()){
             char caracter = palabra.charAt(i);
-            int indice = obtenerIndice(caracter);
-            if (eliminarRecursivamente(actual.hijos.get(indice), palabra, i+1 )){   
-                actual.hijos.set(indice, null);   
+            if (eliminarRecursivamente(actual.hijos.get(caracter), palabra, i+1 )){   
+                actual.hijos.set(caracter, null);   
             }
         }
         return actual.valor == null && tieneHijos(actual) == false;  

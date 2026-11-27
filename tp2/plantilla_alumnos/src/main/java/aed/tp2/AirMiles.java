@@ -103,7 +103,7 @@ public class AirMiles implements SistemaAirMiles {
             throw new IllegalArgumentException("La cantidad a canjear no puede ser negativa");
         }
         Usuario usuario = buscarUsuarioPorID(id);
-        if (u == null) {
+        if (usuario == null) {
             throw new IllegalArgumentException("Usuario no existe");
         }
         if (usuario.millas_disponibles < cantidad) {
