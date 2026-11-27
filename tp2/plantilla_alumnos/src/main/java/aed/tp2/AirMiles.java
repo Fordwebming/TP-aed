@@ -29,7 +29,7 @@ public class AirMiles implements SistemaAirMiles {
         }
 
         Usuario u = new Usuario(id);  
-        usuarios.insertar(u.identificador,u);
+        usuarios.insertar(u.obtenerIdentificador(),u);
         HandleUsuario<Usuario> handle =new HandleUsuario<Usuario>(u);//agrego estas 3 lineas para registrando en el heap
         handle.asignarHeap(ranking);
         ranking.insertar(handle);
@@ -51,7 +51,7 @@ public class AirMiles implements SistemaAirMiles {
         Usuario u = new Usuario(id);
         u.aumentarDisponibles(500);
         u.aumentarTotales(500);
-        usuarios.insertar(u.identificador , u);
+        usuarios.insertar(u.obtenerIdentificador() , u);
         referidor.aumentarDisponibles(500);
         referidor.aumentarTotales(500);
         // como las constantes no cuentan para la complejidad puedo recorrer el arbol 3 veces sin romper la consigna
@@ -310,8 +310,8 @@ public class AirMiles implements SistemaAirMiles {
     //metodos auxiliares
    public Usuario buscarUsuarioPorID(int u){
         ABB<Integer,Usuario>.Nodo raiz_actual = usuarios.raiz;
-        while (raiz_actual != null && raiz_actual.valor.identificador != u ){
-            if (raiz_actual.valor.identificador < u){ //busco a la derecha
+        while (raiz_actual != null && raiz_actual.valor.obtenerIdentificador() != u ){
+            if (raiz_actual.valor.obtenerIdentificador() < u){ //busco a la derecha
                 raiz_actual = raiz_actual.derecha;
             }
             else{
