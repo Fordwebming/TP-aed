@@ -56,7 +56,7 @@ public class AirMiles implements SistemaAirMiles {
         referidor.aumentarTotales(500);
         // como las constantes no cuentan para la complejidad puedo recorrer el arbol 3 veces sin romper la consigna
         //agrego las mismas lineas que en registrar usuario
-        ranking.actualizar(referidor.handleRanking);
+        ranking.actualizar(referidor.obtenerHandle());
         HandleUsuario<Usuario> handle =new HandleUsuario<Usuario>(u);
         handle.asignarHeap(ranking);
         ranking.insertar(handle);
@@ -94,7 +94,7 @@ public class AirMiles implements SistemaAirMiles {
                 promociones.eliminar(nombrePromo);
             }
         }
-        ranking.actualizar(u.handleRanking);
+        ranking.actualizar(u.obtenerHandle());
         actualizarMayorAcumulador(u);
     }
 
@@ -113,7 +113,7 @@ public class AirMiles implements SistemaAirMiles {
         usuario.aumentarGastadas(cantidad);
 
         actualizarMayorCanjeador(usuario);
-        ranking.actualizar(usuario.handleRanking);
+        ranking.actualizar(usuario.obtenerHandle());
     }
 
     public void transferirMillas(int origen, int destino, double cantidad) {
@@ -142,8 +142,8 @@ public class AirMiles implements SistemaAirMiles {
         
         actualizarMayorCanjeador(origenID);
 
-        ranking.actualizar(origenID.handleRanking);//en estas dos lineas actualizo el heap ya que para uno aumenta y para el otro disminuye
-        ranking.actualizar(destinoID.handleRanking);
+        ranking.actualizar(origenID.obtenerHandle());//en estas dos lineas actualizo el heap ya que para uno aumenta y para el otro disminuye
+        ranking.actualizar(destinoID.obtenerHandle());
 
         origenID.registrarTransferenciaConUsuario(destinoID);
         
@@ -192,7 +192,7 @@ public class AirMiles implements SistemaAirMiles {
         for (int i=0; i<res.length; i+=1) {
             Usuario usuarioRanking = ranking.devolverMaximo();
             res[i] = usuarioRanking.obtenerIdentificador();
-            HandleUsuario<Usuario> handleDeUsuario = usuarioRanking.handleRanking;
+            HandleUsuario<Usuario> handleDeUsuario = usuarioRanking.obtenerHandle();//obtener handle
             ranking.eliminarEn(0);//siempre elimino el primero para que avance al siguiente del rank
             guardadoTemporal.add(handleDeUsuario);
         }//voy sacando los handle del haep para luego volver a insertar en log n
@@ -276,9 +276,9 @@ public class AirMiles implements SistemaAirMiles {
         int cantDePares =0;
         for (int i =0; i < arregloDeUsuarios.length; i+=1) {
             Usuario usuario =arregloDeUsuarios[i];
-            if (usuario.esTransferidorExclusivo) {
+            if (usuario.esTransferidorExclusivo) {//es exclusivo
                 Usuario otro = usuario.obtenerUsuarioExclusivo();
-                if(otro != null && otro.esTransferidorExclusivo &&
+                if(otro != null && otro.esTransferidorExclusivo &&//es exclusivo
                     otro.obtenerUsuarioExclusivo().obtenerIdentificador() == usuario.obtenerIdentificador() &&
                     usuario.obtenerIdentificador()< otro.obtenerIdentificador()) {//para no agregar dos veces el mismo par
                         cantDePares +=1;
@@ -291,9 +291,9 @@ public class AirMiles implements SistemaAirMiles {
         int indice=0;
         for (int i=0; i<arregloDeUsuarios.length;i+=1) {
             Usuario usuario = arregloDeUsuarios[i];
-            if (usuario.esTransferidorExclusivo) {
+            if (usuario.esTransferidorExclusivo) {//es exclusivo
                 Usuario otro =usuario.obtenerUsuarioExclusivo();
-                if (otro != null && otro.esTransferidorExclusivo &&
+                if (otro != null && otro.esTransferidorExclusivo &&//es exclusivo
                     otro.obtenerUsuarioExclusivo().obtenerIdentificador() == usuario.obtenerIdentificador() &&
                     usuario.obtenerIdentificador() < otro.obtenerIdentificador()) {
                     res[indice][0]= usuario.obtenerIdentificador();
@@ -345,35 +345,6 @@ public class AirMiles implements SistemaAirMiles {
             return 1.0; // la promo no esta activa o alcanzo el tope
         }
         return p.factor;
-    }
-    private void actualizarExclusividad(Usuario u) {
-
-        if (u.recibioExclusivamente && u.transfirioExclusivamente && 
-            (u.unicoUsuarioDelQRecibe != -1 || u.unicoUsuarioAlQTransfiere != -1)) {
-
-            int idExclusivo;
-
-            if (u.unicoUsuarioDelQRecibe != -1) {
-                idExclusivo = u.unicoUsuarioDelQRecibe;
-            } else {
-                idExclusivo = u.unicoUsuarioAlQTransfiere;
-            }
-
-            if (u.unicoUsuarioDelQRecibe != -1 && u.unicoUsuarioAlQTransfiere != -1 &&
-                u.unicoUsuarioDelQRecibe != u.unicoUsuarioAlQTransfiere) {
-
-                u.esTransferidorExclusivo = false;
-                u.asignarUsuarioExclusivo(null);
-
-            } else {
-                u.esTransferidorExclusivo = true;
-                u.asignarUsuarioExclusivo(buscarUsuarioPorID(idExclusivo));
-            }
-
-        } else {
-            u.esTransferidorExclusivo = false;
-            u.asignarUsuarioExclusivo(null);
-        }
     }
 
     private void actualizarMayorAcumulador(Usuario u) {

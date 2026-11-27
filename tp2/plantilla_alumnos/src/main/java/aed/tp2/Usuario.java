@@ -5,7 +5,7 @@ public class Usuario implements Comparable<Usuario> {
     private double millas_totales;
     private  double millas_disponibles;
     private double millas_gastadas;
-    public HandleUsuario<Usuario> handleRanking;
+    private HandleUsuario<Usuario> handleRanking;
     public boolean recibioExclusivamente;
     public boolean transfirioExclusivamente;
     public int unicoUsuarioDelQRecibe;
@@ -75,6 +75,10 @@ public class Usuario implements Comparable<Usuario> {
 
     public boolean esExclusivo() {
         return esTransferidorExclusivo;
+    }
+
+    public HandleUsuario<Usuario> obtenerHandle() {
+        return handleRanking;
     }
 
     public void asignarHandle(HandleUsuario<Usuario> h) {
