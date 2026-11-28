@@ -192,7 +192,7 @@ public class AirMiles implements SistemaAirMiles {
         for (int i=0; i<res.length; i+=1) {
             Usuario usuarioRanking = ranking.devolverMaximo();
             res[i] = usuarioRanking.obtenerIdentificador();
-            HandleUsuario<Usuario> handleDeUsuario = usuarioRanking.obtenerHandle();//obtener handle
+            HandleUsuario<Usuario> handleDeUsuario = usuarioRanking.obtenerHandle();
             ranking.eliminarEn(0);//siempre elimino el primero para que avance al siguiente del rank
             guardadoTemporal.add(handleDeUsuario);
         }//voy sacando los handle del haep para luego volver a insertar en log n
@@ -276,9 +276,9 @@ public class AirMiles implements SistemaAirMiles {
         int cantDePares =0;
         for (int i =0; i < arregloDeUsuarios.length; i+=1) {
             Usuario usuario =arregloDeUsuarios[i];
-            if (usuario.esTransferidorExclusivo) {//es exclusivo
+            if (usuario.esExclusivo()) {//es exclusivo
                 Usuario otro = usuario.obtenerUsuarioExclusivo();
-                if(otro != null && otro.esTransferidorExclusivo &&//es exclusivo
+                if(otro != null && otro.esExclusivo() &&//es exclusivo
                     otro.obtenerUsuarioExclusivo().obtenerIdentificador() == usuario.obtenerIdentificador() &&
                     usuario.obtenerIdentificador()< otro.obtenerIdentificador()) {//para no agregar dos veces el mismo par
                         cantDePares +=1;
@@ -291,9 +291,9 @@ public class AirMiles implements SistemaAirMiles {
         int indice=0;
         for (int i=0; i<arregloDeUsuarios.length;i+=1) {
             Usuario usuario = arregloDeUsuarios[i];
-            if (usuario.esTransferidorExclusivo) {//es exclusivo
+            if (usuario.esExclusivo()) {//es exclusivo
                 Usuario otro =usuario.obtenerUsuarioExclusivo();
-                if (otro != null && otro.esTransferidorExclusivo &&//es exclusivo
+                if (otro != null && otro.esExclusivo() &&//es exclusivo
                     otro.obtenerUsuarioExclusivo().obtenerIdentificador() == usuario.obtenerIdentificador() &&
                     usuario.obtenerIdentificador() < otro.obtenerIdentificador()) {
                     res[indice][0]= usuario.obtenerIdentificador();

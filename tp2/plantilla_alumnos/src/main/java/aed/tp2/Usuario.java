@@ -6,11 +6,11 @@ public class Usuario implements Comparable<Usuario> {
     private  double millas_disponibles;
     private double millas_gastadas;
     private HandleUsuario<Usuario> handleRanking;
-    public boolean recibioExclusivamente;
-    public boolean transfirioExclusivamente;
-    public int unicoUsuarioDelQRecibe;
-    public int unicoUsuarioAlQTransfiere;
-    public boolean esTransferidorExclusivo;
+    private boolean recibioExclusivamente;
+    private  boolean transfirioExclusivamente;
+    private  int unicoUsuarioDelQRecibe;
+    private int unicoUsuarioAlQTransfiere;
+    private boolean esTransferidorExclusivo;
     private Usuario usuarioExclusivo;
 
 
@@ -33,12 +33,28 @@ public class Usuario implements Comparable<Usuario> {
         return Double.compare(this.millas_disponibles, otro.millas_disponibles);
     }
 
+    public boolean recibioSiempreDelMismo() {
+        return recibioExclusivamente;
+    }
+
+    public void cambiaValorRecibioExclusivamente(boolean b) {
+        this.recibioExclusivamente = b;
+    }
+
     public Usuario obtenerUsuarioExclusivo() {
         return usuarioExclusivo;
     }
 
     public void asignarUsuarioExclusivo(Usuario u) {
         usuarioExclusivo=u;
+    }
+
+    public int idUnicoUsuarioDelQueRecibe() {
+        return unicoUsuarioDelQRecibe;
+    }
+
+    public void asignarIdUnicoUsuarioDelQRecibe(int id) {
+        this.unicoUsuarioDelQRecibe = id;
     }
 
     public double obtenerMillasDisponibles() {
@@ -88,24 +104,24 @@ public class Usuario implements Comparable<Usuario> {
     public void registrarTransferenciaConUsuario(Usuario otro) {
         //
         if (this.unicoUsuarioAlQTransfiere < 0) {//registro si los usuarios siempre transfieren a uno solo
-            this.unicoUsuarioAlQTransfiere = otro.identificador;
-        } else if (this.unicoUsuarioAlQTransfiere != otro.identificador) {
+            this.unicoUsuarioAlQTransfiere = otro.obtenerIdentificador();
+        } else if (this.unicoUsuarioAlQTransfiere != otro.obtenerIdentificador()) {
             this.transfirioExclusivamente = false;
         }
 
         //verifico exclusividad despues de algun movimiento con otro usuario
-        if (otro.unicoUsuarioDelQRecibe < 0) {//registro si un usuario recibe siempre del mismo
-            otro.unicoUsuarioDelQRecibe = this.identificador;
-        } else if (otro.unicoUsuarioDelQRecibe != this.identificador) {
-            otro.recibioExclusivamente = false;
+        if (otro.idUnicoUsuarioDelQueRecibe() < 0) {//registro si un usuario recibe siempre del mismo
+            otro.asignarIdUnicoUsuarioDelQRecibe(this.identificador);
+        } else if (otro.idUnicoUsuarioDelQueRecibe() != this.identificador) {
+            otro.cambiaValorRecibioExclusivamente(false);
         }  
     }
 
     public void actualizarExclusividad(Usuario otro) {
         this.esTransferidorExclusivo = this.transfirioExclusivamente && 
         this.recibioExclusivamente &&
-        (this.unicoUsuarioAlQTransfiere == otro.identificador || this.unicoUsuarioAlQTransfiere==-1)&&
-        (this.unicoUsuarioDelQRecibe == otro.identificador || this.unicoUsuarioDelQRecibe==-1);
+        (this.unicoUsuarioAlQTransfiere == otro.obtenerIdentificador() || this.unicoUsuarioAlQTransfiere==-1)&&
+        (this.unicoUsuarioDelQRecibe == otro.obtenerIdentificador() || this.unicoUsuarioDelQRecibe==-1);
 
         if (this.esTransferidorExclusivo) {
             this.asignarUsuarioExclusivo(otro);
